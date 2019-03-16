@@ -1,1 +1,10 @@
-Hi
+User: <%= current_user.email %><br><br>
+Currently in game: <%= current_user.game&.id %><br>
+
+<% Game.all.each do |game| %>
+    Game: <%= game.id %><br>
+    <a href="/games/<%= game.id %>/join">
+        <button class="btn btn-default">Join</button>
+    </a>
+    <hr>
+<% end %>
