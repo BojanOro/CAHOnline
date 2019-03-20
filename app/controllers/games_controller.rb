@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-    def join
+    def play
         # Assign the user to the game
         current_user.update(game: Game.find(params['id']))
     end

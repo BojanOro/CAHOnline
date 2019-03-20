@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resources :games do
     member do
-      get 'join', to: 'games#join'
+      get 'play', to: 'games#play'
     end
   end
 end
