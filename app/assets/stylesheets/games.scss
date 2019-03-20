@@ -1,3 +1,26 @@
 // Place all the styles related to the Game controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.card {
+  font-family: 'Heebo', sans-serif;
+  font-size: 18pt;
+  font-weight: bolder;
+  height: 250px;
+  width: 200px;
+
+  .bg-dark {
+    color: white;
+  }
+}
+
+.deck-drop {
+  height: 270px;
+  width: 220px;
+  background-color: #edecec;
+  border: 1px dotted black;
+  display: flex;
+
+  .card {
+    margin: auto;
+  }
+}

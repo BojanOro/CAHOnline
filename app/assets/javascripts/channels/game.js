@@ -17,6 +17,12 @@ $( document ).ready(function() {
       // Called when there's incoming data on the websocket for this channel
       console.log("Recieved");
       console.log(data);
+
+      switch(data["type"]){
+        case "CARD_MOVE":
+          moveCard(data["params"]["cardId"], data["params"]["dropZoneId"], "LOCAL");
+          break;
+      }
     }
   });
 });

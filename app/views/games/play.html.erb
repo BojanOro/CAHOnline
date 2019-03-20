@@ -1,2 +1,54 @@
 You are in game <%= current_user.game.id %>
 <div id="game_id" value="<%= current_user.game.id %>"><%= current_user.game.id %></div>
+
+<div class="row">
+  <div class="deck-drop" id="drop_1">
+  </div>
+</div>
+
+<div class="row">
+  <div class="card" id="card_1">
+    <div class="card-body">
+      <p class="card-text">Court-ordered rehab.</p>
+    </div>
+  </div>
+
+  <div class="card" id="card_2">
+    <div class="card-body">
+      <p class="card-text">Not giving a shit about the Third World.</p>
+    </div>
+  </div>
+
+  <div class="card" id="card_3">
+    <div class="card-body">
+      <p class="card-text">Bingeing and purging.</p>
+    </div>
+  </div>
+
+  <div class="card" id="card_4">
+    <div class="card-body">
+      <p class="card-text">A tiny horse.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body bg-dark">
+      <p class="card-text">What ended my last relationship?</p>
+    </div>
+  </div>
+</div>
+
+<script>
+$("#card_1").draggable({ revert: "invalid" });
+$("#card_2").draggable({ revert: "invalid" });
+$("#card_3").draggable({ revert: "invalid" });
+$("#card_4").draggable({ revert: "invalid" });
+
+$("#drop_1").droppable({
+      drop: function( event, ui ) {
+        var cardId = ui.draggable.attr('id').split("_")[1];
+        moveCard(cardId, 1);
+      }
+    });
+
+</script>

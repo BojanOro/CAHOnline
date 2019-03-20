@@ -4,6 +4,7 @@ class GameChannel < ApplicationCable::Channel
   end
 
   def receive(data)
+    # Add logic here to validate player UID before we send out the update to all
     ActionCable.server.broadcast("game_#{params['game_id']}", data)
   end
 
