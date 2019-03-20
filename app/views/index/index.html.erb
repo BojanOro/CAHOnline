@@ -3,7 +3,7 @@ Currently in game: <%= current_user.game&.id %><br>
 
 <% Game.all.each do |game| %>
     Game: <%= game.id %><br>
-    <a href="/games/<%= game.id %>/join">
+    <a href="/play/<%= game.id %>/join">
         <button class="btn btn-success">Join</button>
     </a>
     <hr>
