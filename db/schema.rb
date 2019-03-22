@@ -10,14 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_16_161148) do
+ActiveRecord::Schema.define(version: 2019_03_22_012935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "card_templates", force: :cascade do |t|
+    t.string "color"
+    t.string "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.integer "game_id"
+    t.integer "card_template_id"
+    t.integer "user_id"
+    t.string "face"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "state"
+    t.integer "card_tzar_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -29,6 +48,8 @@ ActiveRecord::Schema.define(version: 2019_03_16_161148) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "game_id"
+    t.integer "game_points"
+    t.integer "join_order"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
