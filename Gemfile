@@ -7,7 +7,7 @@ gem 'devise'
 gem "bootstrap", ">= 4.3.1"
 gem 'jquery-rails'
 gem 'font-awesome-sass', '~> 5.6.1'
-
+gem 'redis'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 gem 'pg'

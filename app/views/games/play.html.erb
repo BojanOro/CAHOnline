@@ -1,5 +1,6 @@
-You are in game <%= current_user.game.id %>
-<div id="game_id" value="<%= current_user.game.id %>"><%= current_user.game.id %></div>
+Game: <div id="game_id"><%= current_user.game.id %></div>
+Player: <div id="player_id"><%= current_user.id %></div>
+Join order: <div id="player_join_order"><%= current_user.join_order %></div>
 
 <div class="row">
   <div class="deck-drop" id="drop_1">
