@@ -1,10 +1,25 @@
-User: <%= current_user.email %><br><br>
-Currently in game: <%= current_user.game&.id %><br>
-
+<div id="games">
+<div id="userinfo">
+ Welcome <%= current_user.email %>!<br><br>
+ <br>
+</div>
 <% Game.all.each do |game| %>
-    Game: <%= game.id %><br>
+    <% if game.id == current_user.game&.id %>
+    <div id ="currentgame">
+    Game: <%= game.id %> (Your current game!)
     <a href="/games/<%= game.id %>/play">
-        <button class="btn btn-success">Join</button>
+        <button class="join">Rejoin</button>
     </a>
     <hr>
+    </div>
+    <% else %>
+    <div id ="gamenumber">
+    Game: <%= game.id %>
+    <a href="/games/<%= game.id %>/play">
+        <button class="join">Join</button>
+    </a>
+    <hr>
+    </div>
 <% end %>
+<% end %>
+</div>

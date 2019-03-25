@@ -1,3 +1,88 @@
 // Place all the styles related to the Index controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.container{
+font-family: Tahoma, Geneva, sans-serif;
+}
+#games{
+    position:absolute;
+    top:0px;
+    left: 0px;
+    width:100%;
+    height:100%;
+    overflow: auto;
+    background-color: rgb(221, 235, 255);
+    color: black;
+    text-align: left;
+    font-size: 20px;
+
+}
+
+#userinfo{
+position: relative;
+left: 15px;
+text-align: left;
+}
+
+#currentgame{
+    color: red;
+    position: relative;
+    left: 400px;
+}
+#gamenumber{
+    position: relative;
+    left: 400px;
+    margin: 0 auto;
+}
+.join {
+    left: 450px;
+    width: 80%;
+    border-radius: 8px;
+	position: relative;
+	display: inline-block;
+    font-size: 15px;
+    width: 70px;
+    height: 35px;
+    top: 0px;
+	padding: 5px 5px;
+	color: white;
+	margin: 20px 10px 10px;
+	border-radius: 6px;
+	text-align: center;
+	transition: top .01s linear;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+    background-color: #cb99c5;
+	box-shadow: 0 0 0 1px #cb99c5 inset,
+				0 0 0 2px rgba(255,255,255,0.15) inset,
+				0 8px 0 0 rgba(189, 142, 183, .7),
+				0 8px 0 1px rgba(0,0,0,.4),
+				0 8px 8px 1px rgba(0,0,0,0.5);
+}
+.join:hover    {background-color: #D19ECB;}
+
+.join:active {
+    top: 9px;
+	box-shadow: 0 0 0 1px #cb99c5 inset,
+				0 0 0 2px rgba(255,255,255,0.15) inset,
+				0 0 0 1px rgba(0,0,0,0.4);
+}
+
+#currentgame .join{
+    left: 258px;
+    background: #fa5a5a;
+    background-color: #e74c3c;
+    box-shadow: 0 0 0 1px #c63702 inset,
+        0 0 0 2px rgba(255,255,255,0.15) inset,
+        0 8px 0 0 #C24032,
+        0 8px 0 1px rgba(0,0,0,0.4),
+                0 8px 8px 1px rgba(0,0,0,0.5);
+}
+#currentgame .join:hover{
+    background-color: #e74c3c;
+}
+#currentgame .join:active{
+box-shadow: 0 0 0 1px #c63702 inset,
+                0 0 0 2px rgba(255,255,255,0.15) inset,
+                0 0 0 1px rgba(0,0,0,0.4);
+}
