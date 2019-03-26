@@ -84,7 +84,8 @@ class Game < ApplicationRecord
     self.users.each do |player|
       if player.cards.count < 7
         self.white_deck.first.update_attributes(user: player, status: "hand")
+      end
     end
   end
-end
+  
 end
