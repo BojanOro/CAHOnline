@@ -2,7 +2,7 @@ html{
     font-family: Tahoma, Geneva, sans-serif;  
 }
 body{
-    background-color: rgb(221, 235, 255);
+    background-color: black;
     font-family: Tahoma, Geneva, sans-serif;
     width:980px;
     margin:auto; 
@@ -12,12 +12,12 @@ body{
 #loginform {
     position: absolute;
     background-color: white;
-    top: 10%;
+    color: black;
+    top: 18%;
     left: 40%;
     width: 30%;
     text-align: center;
   padding: 10px;
-  box-shadow: 5px 10px 18px #888888;
   border-radius: 8px;
 }
 #loginform *{
@@ -32,31 +32,24 @@ body{
     width: 80%;
     border-radius: 8px;
 }
-.loginbutton {
-	position: relative;
-	display: inline-block;
-    font-size: 20px;
-    width: 125px;
-    top: -25px;
-	padding: 20px 18px;
-	color: white;
-	margin: 20px 10px 10px;
-	border-radius: 6px;
-	text-align: center;
-	transition: top .01s linear;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
-    background-color: #cb99c5;
-	box-shadow: 0 0 0 1px #cb99c5 inset,
-				0 0 0 2px rgba(255,255,255,0.15) inset,
-				0 8px 0 0 rgba(189, 142, 183, .7),
-				0 8px 0 1px rgba(0,0,0,.4),
-				0 8px 8px 1px rgba(0,0,0,0.5);
+.actions {
+    position: relative;
+    left: 33%;
 }
-.loginbutton:hover    {background-color: #D19ECB;}
-
-.loginbutton:active {
-    top: -19px;
-	box-shadow: 0 0 0 1px #cb99c5 inset,
-				0 0 0 2px rgba(255,255,255,0.15) inset,
-				0 0 0 1px rgba(0,0,0,0.4);
+h1{
+    position: relative;
+    left: 65px;
+    text-align: center;
+    color: white;
 }
+.btn{
+    max-width: 70px;
+    color:black;
+    background-color: white;
+    border-color: black;
+  }
+  .btn:hover{
+    color: white;
+    background-color: black;
+    border-color: black;
+  }

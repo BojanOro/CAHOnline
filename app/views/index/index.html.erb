@@ -1,25 +1,110 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+  <a class="navbar-brand" href="#">CAHOnline!</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About Us</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Account Info</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<style>
+
+#games{
+    position: relative;
+    left: 25%;
+}
+.card-header, .jumbotron, .navbar{
+  background-color: black;
+  color: white;
+}
+.jumbotron{
+    position: relative;
+    left: 25%;
+}
+.jumbotron-heading{
+    position: relative;
+    left: 0%;
+}
+.btn{
+  color:black;
+  background-color: white;
+  border-color: black;
+  min-width: 100px;
+}
+.btn:hover{
+
+  color: white;
+  background-color: black;
+  border-color: black;
+}
+</style>
+
+<br><br><br><br>
+<section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Welcome <%= current_user.email %>, to Cards Against Humanity Online!</h1>
+      <p class="lead text-muted">Please select a lobby below to join/rejoin a game.</p>
+    </div>
+  </section>
+<hr>
+
 <div id="games">
-<div id="userinfo">
- Welcome <%= current_user.email %>!<br><br>
- <br>
-</div>
-<% Game.all.each do |game| %>
-    <% if game.id == current_user.game&.id %>
-    <div id ="currentgame">
-    Game: <%= game.id %> (Your current game!)
-    <a href="/games/<%= game.id %>/play">
-        <button class="join">Rejoin</button>
-    </a>
-    <hr>
+  <div class="container">
+    <div class="card-deck mb-3 text-center">
+    <% Game.all.each do |game| %>
+        <% if game.id == current_user.game&.id %>
+
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header cahTheme">
+            <h4 class="my-0 font-weight-normal">Current game!</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>There are _ in game.</li>
+            </ul>
+            <a href="/games/<%= game.id %>/play">
+            <div class="joinButtons">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Rejoin</button>
+            </div>
+            </a>
+          </div>
+        </div>
+
+        <% else %>
+
+
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header cahTheme">
+            <h4 class="my-0 font-weight-normal">Game: <%= game.id %></h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>There are _ in game.</li>
+            </ul>
+            <a href="/games/<%= game.id %>/play">
+            <div class="joinButtons">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Join</button>
+            </div>
+            </a>
+          </div>
+        </div>
+
+
+
+
+    <% end %>
+    <% end %>
     </div>
-    <% else %>
-    <div id ="gamenumber">
-    Game: <%= game.id %>
-    <a href="/games/<%= game.id %>/play">
-        <button class="join">Join</button>
-    </a>
-    <hr>
-    </div>
-<% end %>
-<% end %>
+  </div>
 </div>
