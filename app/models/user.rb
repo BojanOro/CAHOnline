@@ -10,4 +10,8 @@ class User < ApplicationRecord
   def add_card_to_hand(card_template)
     self.cards.create(card_template: card_template, face: "down", game: self.game, status: "hand")
   end
+
+  def leave_game
+    self.update_attributes(game: nil)
+  end
 end

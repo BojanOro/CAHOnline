@@ -87,5 +87,13 @@ class Game < ApplicationRecord
       end
     end
   end
-  
+
+  def add_user(user)
+    if !self.users.contains(user)
+      user.leave_game
+      self.users << user
+      user.update_attributes(join_order: self.get_join_order(user))
+    end
+  end
+
 end
