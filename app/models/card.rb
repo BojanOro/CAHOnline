@@ -16,7 +16,6 @@ class Card < ApplicationRecord
       card_template_id: self.card_template.id,
       card_template: self.card_template,
       face: self.face,
-      user_id: self.user&.id,
       sequence: self.sequence
     }
   end

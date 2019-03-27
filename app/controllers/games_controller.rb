@@ -1,21 +1,32 @@
 class GamesController < ApplicationController
+    def create
+      game = Game.create(name: params['game']['name'], password: params['game']['password'], state: "setup" )
+      game.add_user(current_user)
+      card_tzar = game.next_card_tzar
+      redirect_to play_game_path(game)
+      #TODO: set max points parameter in creation
+    end
+
     def play
       # Assign the user to the game
       game = Game.find(params['id'])
-
-      current_user.update_attributes(
-        game: game,
-        join_order: game.get_join_order(current_user)
-      )
-      game.update_attributes(state: "starting")
+      game.add_user(current_user)
+      ActionCable.server.broadcast("game_#{game.id}", {
+        type: "PLAYER_JOINED",
+        params: {
+          new_user: current_user.email
+        }
+      })
     end
 
+    #after card tzar presses start
     def start_game
       game = Game.find(params['id'])
       game.setup
       game.deal_cards
       black_card = game.draw_black_card
       card_tzar = game.next_card_tzar
+      game.update_attributes(state: "playing")
       ActionCable.server.broadcast("game_#{game.id}", {
         type: "GAME_START",
         params: {
@@ -45,24 +56,26 @@ class GamesController < ApplicationController
         return false
       end
 
-      ActionCable.server.broadcast("game_#{game.id}", {
+    message = {
         type: "CARD_PLAY",
         params: {
-          card: card.id
-        },
-        fromPlayer: current_user.id
-      })
+          fromPlayer: current_user.id
+        }
+      }
 
       if game.all_played?
         game.flip_played_cards
-        ActionCable.server.broadcast("game_#{game.id}", {
+        message["callback"] = {
           type: "TZAR_CHOICE",
           params: {
-            card_tzar: game.card_tzar.id
+            card_tzar: game.card_tzar.id,
+            played_cards: game.played_cards
           }
-        })
+        }
       end
       render json: {success: true}
+
+      ActionCable.server.broadcast("game_#{game.id}", message)
     end
 
     def tzar_choice
@@ -84,5 +97,13 @@ class GamesController < ApplicationController
           clear_table_at: Time.now.to_i + 15
         }
       })
+    end
+
+    #TODO: exit function in front
+    def user_exit
+      game = Game.find(params['id'])
+      if current_user == game.card_tzar
+        game.next_card_tzar
+      game.remove_user(current_user)
     end
 end
