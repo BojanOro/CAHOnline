@@ -90,13 +90,10 @@ class Game < ApplicationRecord
 
   def add_user(user)
     if !self.users.contains(user)
-      self.remove_user(user)
+      user.leave_game
       self.users << user
       user.update_attributes(join_order: self.get_join_order(user))
     end
   end
 
-  def remove_user(user)
-    user.update_attributes(game: nil)
-  end
 end
