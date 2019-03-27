@@ -2,7 +2,7 @@ class GamesController < ApplicationController
     def create
       game = Game.create(name: params['game']['name'], password: params['game']['password'], state: "setup" )
       game.add_user(current_user)
-      card_tzar = game.next_card_tzar
+      game.next_card_tzar
       redirect_to play_game_path(game)
       #TODO: set max points parameter in creation
     end
