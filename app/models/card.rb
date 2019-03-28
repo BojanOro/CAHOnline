@@ -13,7 +13,7 @@ class Card < ApplicationRecord
 
   def as_json(options)
     {
-      card_template_id: self.card_template.id,
+      id: self.id,
       card_template: self.card_template,
       face: self.face,
       sequence: self.sequence

@@ -19,8 +19,20 @@ $( document ).ready(function() {
       console.log(data);
 
       switch(data["type"]){
-        case "CARD_MOVE":
-          moveCard(data["params"]["cardId"], data["params"]["dropZoneId"], "LOCAL");
+        case "PLAYER_JOINED":
+          msg_playerJoined(data);
+          break;
+
+        case "GAME_START":
+          msg_gameStart(data);
+          break;
+
+        case "CARD_PLAY":
+          msg_cardPlay(data);
+          break;
+
+        case "END_ROUND":
+          msg_endRound(data);
           break;
       }
     }

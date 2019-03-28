@@ -1,5 +1,7 @@
-<%= form_for Game.new, url: {action: "create"}, html: {class: "form-control"} do |f| %>
-  <%= f.text_field :name %>
-  <%= f.text_field :password %>
-  <%= f.submit "Create Game" %>
+<%= form_for Game.new, url: {action: "create"} do |f| %>
+  <%= f.label "Name" %><br>
+  <%= f.text_field :name %><br>
+  <%= f.label "Password" %><br>
+  <%= f.text_field :password %><br>
+  <%= f.submit "Create Game" %><br>
 <% end %>

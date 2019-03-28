@@ -31,6 +31,7 @@ class Game < ApplicationRecord
   end
 
   def draw_black_card
+    self.active_black_card.update_attributes(status: "used")
     card = self.black_deck.limit(1).first
     card.update_attributes(status: "played")
     return card
@@ -64,7 +65,7 @@ class Game < ApplicationRecord
   end
 
   def all_played?
-    self.white_played.count == (users.count -1)
+    self.white_played.count == (self.users.count - 1)
   end
 
   def flip_played_cards
@@ -89,10 +90,10 @@ class Game < ApplicationRecord
   end
 
   def add_user(user)
-    if !self.users.contains(user)
+    if !self.users.include?(user)
       user.leave_game
+      user.update_attributes(join_order: self.get_join_order(user), game_points: 0)
       self.users << user
-      user.update_attributes(join_order: self.get_join_order(user))
     end
   end
 

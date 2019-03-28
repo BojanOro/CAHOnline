@@ -7,9 +7,11 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 User.create(email: "test@test.com", password: "lol123")
 User.create(email: "a@b.com", password: "lol123")
-Game.create()
-Game.create()
-Game.create()
+User.create(email: "dick@butt.com", password: "lol123")
+
+# Game.create()
+# Game.create()
+# Game.create()
 
 CardTemplate.create(color: "black", text: "Why can't I sleep at night?")
 CardTemplate.create(color: "black", text: "I got 99 problems but _ ain't one.")

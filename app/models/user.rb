@@ -14,4 +14,21 @@ class User < ApplicationRecord
   def leave_game
     self.update_attributes(game: nil)
   end
+
+  def get_played_card
+    self.game.white_played.where(user: self).first
+  end
+
+  def played_card?
+    self.get_played_card != nil
+  end
+
+  def as_json(options)
+    {
+      email: self.email,
+      points: self.game_points,
+      id: self.id,
+      order: self.join_order
+    }
+  end
 end

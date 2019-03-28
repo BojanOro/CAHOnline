@@ -14,9 +14,20 @@ class GamesController < ApplicationController
       ActionCable.server.broadcast("game_#{game.id}", {
         type: "PLAYER_JOINED",
         params: {
-          new_user: current_user.email
+          email: current_user.email,
+          points: current_user.game_points,
+          id: current_user.id,
+          order: current_user.join_order,
+          played: current_user.played_card?
         }
       })
+
+      @players = game.users
+      @cardTzar = game.card_tzar&.id || -1
+      @game = game
+      #@played_cards = User.get_played_card
+
+      render "playtwo"
     end
 
     #after card tzar presses start
@@ -25,13 +36,11 @@ class GamesController < ApplicationController
       game.setup
       game.deal_cards
       black_card = game.draw_black_card
-      card_tzar = game.next_card_tzar
       game.update_attributes(state: "playing")
       ActionCable.server.broadcast("game_#{game.id}", {
         type: "GAME_START",
         params: {
-          black_card: black_card,
-          card_tzar: card_tzar.id
+          card_tzar: game.card_tzar.id
         }
       })
       render json: {success: true}
@@ -39,6 +48,11 @@ class GamesController < ApplicationController
 
     def get_white_cards
       render json: current_user.cards
+    end
+
+    def get_black_card
+      game = Game.find(params['id'])
+      render json: game.active_black_card
     end
 
     def play_card
@@ -56,7 +70,7 @@ class GamesController < ApplicationController
         return false
       end
 
-    message = {
+      message = {
         type: "CARD_PLAY",
         params: {
           fromPlayer: current_user.id
@@ -65,11 +79,12 @@ class GamesController < ApplicationController
 
       if game.all_played?
         game.flip_played_cards
+        game.update_attributes(state: "picking")
         message["callback"] = {
           type: "TZAR_CHOICE",
           params: {
             card_tzar: game.card_tzar.id,
-            played_cards: game.played_cards
+            played_cards: game.white_played
           }
         }
       end
@@ -92,6 +107,7 @@ class GamesController < ApplicationController
         type: "END_ROUND",
         params: {
           winner: card.user.id,
+          winning_card: card.id,
           black_card: black_card,
           card_tzar: card_tzar.id,
           clear_table_at: Time.now.to_i + 15
@@ -104,6 +120,7 @@ class GamesController < ApplicationController
       game = Game.find(params['id'])
       if current_user == game.card_tzar
         game.next_card_tzar
+      end
       game.remove_user(current_user)
     end
 end

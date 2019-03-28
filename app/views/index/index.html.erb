@@ -3,10 +3,11 @@
  Welcome <%= current_user.email %>!<br><br>
  <br>
 </div>
+<%= link_to "Create Game", new_game_path %>
 <% Game.all.each do |game| %>
     <% if game.id == current_user.game&.id %>
     <div id ="currentgame">
-    Game: <%= game.id %> (Your current game!)
+    Game: <%= game.name %> (Your current game!)
     <a href="/games/<%= game.id %>/play">
         <button class="join">Rejoin</button>
     </a>
@@ -14,7 +15,7 @@
     </div>
     <% else %>
     <div id ="gamenumber">
-    Game: <%= game.id %>
+    Game: <%= game.name %>
     <a href="/games/<%= game.id %>/play">
         <button class="join">Join</button>
     </a>
