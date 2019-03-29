@@ -1,26 +1,50 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+  <a class="navbar-brand" href="#">CAHOnline!</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About Us</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Account Info</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<br><br><br><br>
+<section class="jumbotron text-center jumbotron-dark">
+    <div class="container">
+      <h1 class="jumbotron-heading">Welcome <%= current_user.email %>, to Cards Against Humanity Online!</h1>
+      <p class="lead text-muted">Please select a lobby below to join/rejoin a game.</p>
+    </div>
+  </section>
+<hr>
+
 <div id="games">
-<div id="userinfo">
- Welcome <%= current_user.email %>!<br><br>
- <br>
-</div>
-<%= link_to "Create Game", new_game_path %>
-<% Game.all.each do |game| %>
-    <% if game.id == current_user.game&.id %>
-    <div id ="currentgame">
-    Game: <%= game.name %> (Your current game!)
-    <a href="/games/<%= game.id %>/play">
-        <button class="join">Rejoin</button>
-    </a>
-    <hr>
-    </div>
-    <% else %>
-    <div id ="gamenumber">
-    Game: <%= game.name %>
-    <a href="/games/<%= game.id %>/play">
-        <button class="join">Join</button>
-    </a>
-    <hr>
-    </div>
-<% end %>
-<% end %>
+  <div class="row text-center">
+    <% Game.left_joins(:users).group(:id).order('COUNT(users.id) DESC, games.id').all.each do |game| %>
+      <div class="col-md-3">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header cahTheme">
+            <h4 class="my-0 font-weight-normal"><%= game.name || "Game #{game.id}" %></h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled mb-4">
+              <li>There are <%= game.users.count %> players in game.</li>
+            </ul>
+            <a href="/games/<%= game.id %>/play">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Join</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
