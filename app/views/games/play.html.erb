@@ -1,10 +1,18 @@
-Game: <div id="game_id"><%= current_user.game.id %></div>
-Player: <div id="player_id"><%= current_user.id %></div>
-Join order: <div id="player_join_order"><%= current_user.join_order %></div>
+Game:
+<div id="game_id"><%= current_user.game.id %></div>
+Player:
+<div id="player_id"><%= current_user.id %></div>
+Join order:
+<div id="player_join_order"><%= current_user.join_order %></div>
 
 <div class="row">
-  <div class="deck-drop" id="drop_1">
+  <div class="card">
+    <div class="card-body bg-dark">
+      <p class="card-text">What ended my last relationship?</p>
+    </div>
   </div>
+
+  <div class="deck-drop" id="drop_1"></div>
 </div>
 
 <div class="row">
@@ -31,25 +39,18 @@ Join order: <div id="player_join_order"><%= current_user.join_order %></div>
       <p class="card-text">A tiny horse.</p>
     </div>
   </div>
-
-  <div class="card">
-    <div class="card-body bg-dark">
-      <p class="card-text">What ended my last relationship?</p>
-    </div>
-  </div>
 </div>
 
 <script>
-$("#card_1").draggable({ revert: "invalid" });
-$("#card_2").draggable({ revert: "invalid" });
-$("#card_3").draggable({ revert: "invalid" });
-$("#card_4").draggable({ revert: "invalid" });
+  $("#card_1").draggable({ revert: "invalid" });
+  $("#card_2").draggable({ revert: "invalid" });
+  $("#card_3").draggable({ revert: "invalid" });
+  $("#card_4").draggable({ revert: "invalid" });
 
-$("#drop_1").droppable({
-      drop: function( event, ui ) {
-        var cardId = ui.draggable.attr('id').split("_")[1];
-        moveCard(cardId, 1);
-      }
-    });
-
+  $("#drop_1").droppable({
+    drop: function(event, ui) {
+      var cardId = ui.draggable.attr("id").split("_")[1];
+      moveCard(cardId, 1);
+    }
+  });
 </script>

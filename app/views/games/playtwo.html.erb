@@ -1,76 +1,79 @@
-Game: <span id="game_id"><%= current_user.game.id %></span>
-Player: <span id="player_id"><%= current_user.id %></span>
-Join order: <span id="player_join_order"><%= current_user.join_order %></span>
+Game: <span id="game_id"><%= current_user.game.id %></span> Player:
+<span id="player_id"><%= current_user.id %></span> Join order:
+<span id="player_join_order"><%= current_user.join_order %></span>
 
-<div class="row">
-  <ul id="playerList">
-  </ul>
-</div>
+<div class="gameBox">
+  <div class="gameBoxHeader">
+    <div class="cardTzar">Card Tzar: <%= @cardTzar %></div>
+    <div class="lobbyNumber">Lobby Number: <%= current_user.game.id %></div>
+  </div>
 
-<div class="row" id="startingScreen">
-    <span class="startButton" style="display: none">
-      <button onClick="startGameButton()">Start Game</button>
-    </span>
-</div>
+  <div class="mainText clear" id="text">
+    <button class="btn btn-outline-light btn-lg" onClick="startGameButton()">
+      Start Game
+    </button>
+  </div>
 
-<div class="row">
-  <div id="black-card">
-    <div class="card">
-      <div class="card-body bg-dark">
-        <p class="card-text" id="black-card-text"></p>
-      </div>
+  <div class="game_area" id="game_area">
+    <br />
+    <div class="row">
+      <div class="deck-drop" id="card-drop" style="opacity: 50;">Drag Card Here</div>
+      <div id="face-down-whites"></div>
     </div>
   </div>
 
-  <div class="deck-drop" id="card-drop">
-  </div>
-
-  <div id="face-down-whites">
-
-  </div>
 </div>
-<hr>
-<div class="row" id="white-cards">
+<div class="row" id="white-cards"></div>
+
+<br /><br />
+<div class="row table-responsive">
+  <table class="table" id="table">
+    <thead>
+      <th>Player</th>
+      <th>Score</th>
+      <th>Card Submitted</th>
+      <th>Card Tzar</th>
+    </thead>
+    <tbody id="playerList">
+    </tbody>
+  </table>
 </div>
-
-
 <script>
-var playerId = <%= current_user.id %>;
-var cardTzarId = <%= @cardTzar %>;
-var gameId = <%= @game.id %>;
-var whiteCards = [];
-var blackCard;
-var gameState = "<%= @game.state %>";
+  var playerId = <%= current_user.id %>;
+  var cardTzarId = <%= @cardTzar %>;
+  var gameId = <%= @game.id %>;
+  var whiteCards = [];
+  var blackCard;
+  var gameState = "<%= @game.state %>";
 
-var players = {
-  <% @players.each do |player| %>
-    <%= player.id %>: {
-      email: "<%= player.email %>",
-      points: <%= player.game_points %>,
-      order: <%= player.join_order %>,
-      played: <%= player.played_card? %>,
-    },
-  <% end %>
-};
+  var players = {
+    <% @players.each do |player| %>
+      <%= player.id %>: {
+        email: "<%= player.email %>",
+        points: <%= player.game_points %>,
+        order: <%= player.join_order %>,
+        played: <%= player.played_card? %>,
+      },
+    <% end %>
+  };
 
-initCardDropListener();
+  initCardDropListener();
 
-evaluateCardTzar();
-renderPlayerList();
-getWhiteCards(function(){
-  addPlayedCard(<%= current_user.get_played_card&.id || -1 %>, "<%= current_user.get_played_card&.text %>");
-  enablePickingButtons();
-});
-getBlackCard();
-addFakeWhiteCard(<%= @game.white_played.where.not(user: current_user).count %>);
-
-<% if @game.state == "picking" %>
-  showPlayedCards(<%= @game.white_played.to_json.html_safe %>)
-<% end %>
-
-function startGameButton(){
-  $.get("/games/" + gameId + "/startgame", function( data ) {
+  evaluateCardTzar();
+  renderPlayerList();
+  getWhiteCards(function(){
+    addPlayedCard(<%= current_user.get_played_card&.id || -1 %>, "<%= current_user.get_played_card&.text %>");
+    enablePickingButtons();
   });
-}
+  getBlackCard();
+  addFakeWhiteCard(<%= @game.white_played.where.not(user: current_user).count %>);
 
+  <% if @game.state == "picking" %>
+    showPlayedCards(<%= @game.white_played.to_json.html_safe %>)
+  <% end %>
+
+  function startGameButton(){
+    $.get("/games/" + gameId + "/startgame", function( data ) {
+    });
+  }
 </script>

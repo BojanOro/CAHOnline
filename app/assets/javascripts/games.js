@@ -56,7 +56,7 @@ function msg_endRound(data){
 function renderPlayerList(){
   $("#playerList").empty();
   for (id in players){
-    $("#playerList").append("<li id='player_"+id+"'>" + players[id]["order"] + " - " + players[id]["email"] + " - " + players[id]["points"] + " - " + players[id]["played"] + " / " + (id == cardTzarId) + "</li>");
+    $("#playerList").append("<tr><td id='player_"+id+"'>" + players[id]["order"] + "-" + players[id]["email"] + " </td><td> " + players[id]["points"] + " </td><td> " + players[id]["played"] + " </td><td> " + (id == cardTzarId) + "</td></tr>");
   }
 }
 
@@ -71,12 +71,7 @@ function getBlackCard(){
 }
 
 function renderBlackCard(){
-  $("#black-card").html('\
-    <div class="card">\
-      <div class="card-body bg-dark">\
-        <p class="card-text" id="black-card-text">' + blackCard["text"] + '</p>\
-      </div>\
-    </div>');
+  document.getElementById("text").innerHTML = blackCard["text"];
 }
 
 function getWhiteCards(callback = ()=>{}){
