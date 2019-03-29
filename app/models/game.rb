@@ -94,6 +94,12 @@ class Game < ApplicationRecord
       user.leave_game
       user.update_attributes(join_order: self.get_join_order(user), game_points: 0)
       self.users << user
+
+      #Deal them a hand if the game has already started when they join
+      if self.state == "playing"
+        cards = self.white_deck.limit(7)
+        cards.update_all(user_id: user.id, status: "hand")
+      end
     end
   end
 
