@@ -102,6 +102,7 @@ class GamesController < ApplicationController
       game.refill_hands
       black_card = game.draw_black_card
       card_tzar = game.next_card_tzar
+      game.update_attributes(state: "playing")
 
       ActionCable.server.broadcast("game_#{game.id}", {
         type: "END_ROUND",

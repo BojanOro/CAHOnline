@@ -31,7 +31,7 @@ class Game < ApplicationRecord
   end
 
   def draw_black_card
-    self.active_black_card.update_attributes(status: "used")
+    self.active_black_card&.update_attributes(status: "used")
     card = self.black_deck.limit(1).first
     card.update_attributes(status: "played")
     return card

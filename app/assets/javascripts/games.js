@@ -56,7 +56,7 @@ function msg_endRound(data){
 function renderPlayerList(){
   $("#playerList").empty();
   for (id in players){
-    $("#playerList").append("<li id='player_"+id+"'>" + players[id]["order"] + " - " + players[id]["email"] + " - " + players[id]["points"] + " - " + players[id]["played"] + "</li>");
+    $("#playerList").append("<li id='player_"+id+"'>" + players[id]["order"] + " - " + players[id]["email"] + " - " + players[id]["points"] + " - " + players[id]["played"] + " / " + (id == cardTzarId) + "</li>");
   }
 }
 
@@ -208,10 +208,20 @@ function addPoint(playerId){
   renderPlayerList();
 }
 
+function resetCardSubmissions(){
+  for (key in players) {
+    players[key]["played"] = false;
+  }
+  renderPlayerList();
+}
+
 function clearTable(ctId){
   getBlackCard();
   getWhiteCards();
   $("#face-down-whites").empty();
   cardTzarId = ctId;
   renderPlayerList();
+  $("#card-drop").show();
+  evaluateCardTzar();
+  resetCardSubmissions();
 }
