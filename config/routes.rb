@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'index#index'
-  post 'message', to: 'index#incoming_message'
+  get 'leaderboard', to: 'index#leaderboard'
 
   resources :games do
     member do
@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       get 'startgame', to: 'games#start_game'
       get 'playcard/:card_id', to: 'games#play_card'
       get 'tzarchoice/:card_id', to: 'games#tzar_choice'
+      get 'leave_game', to: 'games#leave_game'
+      get 'register', to: 'games#register'
+      post 'password_test', to: 'games#password_test'
     end
 
   end

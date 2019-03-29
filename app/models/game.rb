@@ -74,7 +74,7 @@ class Game < ApplicationRecord
 
   def winning_card(card)
     winner = card.user
-    winner.update_attributes(game_points: winner.game_points + 1)
+    winner.update_attributes(game_points: winner.game_points + 1, total_points: winner.total_points + 1)
   end
 
   def clear_played_cards

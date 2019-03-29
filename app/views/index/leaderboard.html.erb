@@ -1,0 +1,7 @@
+<div id="leaderboard">
+  <% User.all.each do |user| %>
+  <%= user.name || user.email %>
+  <%= user.game_points || 0 %>
+  <br>
+  <% end %>
+</div>
