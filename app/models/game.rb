@@ -2,10 +2,10 @@ class Game < ApplicationRecord
   has_many :users
   belongs_to :card_tzar, class_name: 'User',  foreign_key: "card_tzar_id", optional: true
 
-  has_many :black_deck, -> { Card.joins(:card_template).where(card_templates: {color: "black"}, status: "deck").order(sequence: :desc) }, class_name: 'Card'
-  has_many :white_deck, -> { Card.joins(:card_template).where(card_templates: {color: "white"}, status: "deck").order(sequence: :desc) }, class_name: 'Card'
-  has_many :white_played, -> { Card.joins(:card_template).where(card_templates: {color: "white"}, status: "played").order(sequence: :desc) }, class_name: 'Card'
-  has_one :active_black_card, -> { Card.joins(:card_template).where(card_templates: {color: "black"}, status: "played") }, class_name: 'Card'
+  has_many :black_deck, -> { Card.joins(:card_template).where(card_templates: {color: "black"}, status: "deck").order(sequence: :desc) }, class_name: 'Card', dependent: :destroy
+  has_many :white_deck, -> { Card.joins(:card_template).where(card_templates: {color: "white"}, status: "deck").order(sequence: :desc) }, class_name: 'Card', dependent: :destroy
+  has_many :white_played, -> { Card.joins(:card_template).where(card_templates: {color: "white"}, status: "played").order(sequence: :desc) }, class_name: 'Card', dependent: :destroy
+  has_one :active_black_card, -> { Card.joins(:card_template).where(card_templates: {color: "black"}, status: "played") }, class_name: 'Card', dependent: :destroy
 
   def setup
     CardTemplate.where(color: "black").order('random()').all.each_with_index do |card, order|
@@ -74,7 +74,7 @@ class Game < ApplicationRecord
 
   def winning_card(card)
     winner = card.user
-    winner.update_attributes(game_points: winner.game_points + 1)
+    winner.update_attributes(game_points: winner.game_points + 1, total_points: winner.total_points + 1)
   end
 
   def clear_played_cards
@@ -91,7 +91,7 @@ class Game < ApplicationRecord
 
   def add_user(user)
     if !self.users.include?(user)
-      user.leave_game
+      user.leave_game()
       user.update_attributes(join_order: self.get_join_order(user), game_points: 0)
       self.users << user
 
@@ -101,5 +101,33 @@ class Game < ApplicationRecord
         cards.update_all(user_id: user.id, status: "hand")
       end
     end
+  end
+
+  def winner
+    self.users.each do |player|
+      if player.game_points >= self.max_points
+        return player
+      end
+    end
+    return false
+  end
+
+  def remove_user(player)
+    player.update_attributes(game: nil)
+
+    if self.users.count == 0
+      self.destroy
+      return true
+    end
+
+    if self.card_tzar == player
+      next_card_tzar
+    end
+    ActionCable.server.broadcast("game_#{self.id}", {
+      type: "PLAYER_LEFT",
+      params: {
+        id: player.id
+      }
+    })
   end
 end

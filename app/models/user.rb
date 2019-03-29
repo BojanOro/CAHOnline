@@ -12,7 +12,11 @@ class User < ApplicationRecord
   end
 
   def leave_game
-    self.update_attributes(game: nil)
+    if self.game
+      self.game.remove_user(self)
+    end
+    self.update_attributes(game: nil, game_points: 0, join_order: 0)
+    self.cards.destroy_all
   end
 
   def get_played_card
@@ -26,6 +30,7 @@ class User < ApplicationRecord
   def as_json(options)
     {
       email: self.email,
+      name: self.name || self.email,
       points: self.game_points,
       id: self.id,
       order: self.join_order

@@ -4,6 +4,7 @@ function msg_playerJoined(data){
   var pid = data["params"]["id"];
   var playerObj = {
     email: data["params"]["email"],
+    name: data["params"]["name"],
     order: data["params"]["order"],
     points: data["params"]["points"],
     played: data["params"]["played"]
@@ -49,6 +50,16 @@ function msg_endRound(data){
     gameState = "playing";
     clearTable(data["params"]["card_tzar"]);
   }, (data["params"]["clear_table_at"] * 1000) - timestamp);
+}
+
+function msg_endGame(data){
+  winner = players[data["params"]["winner"]];
+  alert("Game has ended. " + winner.email + " has won.")
+}
+
+function msg_playerLeft(data){
+  delete players[data["params"]["id"]]
+  renderPlayerList();
 }
 
 //========= mo shit =========== //

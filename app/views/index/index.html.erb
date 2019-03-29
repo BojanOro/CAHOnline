@@ -14,6 +14,12 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Account Info</a>
       </li>
+      <li class="nav-item">
+         <a class="nav-link"> <%= link_to('Logout', destroy_user_session_path, method: :delete) %> </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/leaderboard">Leaderboard</a>
+      </li>
     </ul>
   </div>
 </nav>
@@ -21,7 +27,7 @@
 <br><br><br><br>
 <section class="jumbotron text-center jumbotron-dark">
     <div class="container">
-      <h1 class="jumbotron-heading">Welcome <%= current_user.email %>, to Cards Against Humanity Online!</h1>
+      <h1 class="jumbotron-heading">Welcome <%= current_user.name %>, to Cards Against Humanity Online!</h1>
       <p class="lead text-muted">Please select a lobby below to join/rejoin a game.</p>
       <a href="/games/new"><button class="btn btn-outline-light">Create Game</button></a>
     </div>
@@ -40,8 +46,8 @@
             <ul class="list-unstyled mb-4">
               <li>There are <%= game.users.count %> players in game.</li>
             </ul>
-            <a href="/games/<%= game.id %>/play">
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Join</button>
+            <a href="/games/<%= game.id %>/register">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary"><%= if (game.users.include?(current_user)) then "Rejoin" else "Join" end %></button>
             </a>
           </div>
         </div>
