@@ -1,6 +1,10 @@
 class GamesController < ApplicationController
     def create
-      game = Game.create(name: params['game']['name'], password: params['game']['password'], state: "setup" )
+      game = Game.create(
+        name: params['game']['name'],
+        password: params['game']['password'],
+        max_points: params['game']['max_points'],
+        state: "setup" )
       game.add_user(current_user)
       game.next_card_tzar
       redirect_to play_game_path(game)
@@ -33,10 +37,12 @@ class GamesController < ApplicationController
     #after card tzar presses start
     def start_game
       game = Game.find(params['id'])
+      if(game.state == "playing") then return invalid_request end
+
+      game.update_attributes(state: "playing")
       game.setup
       game.deal_cards
       black_card = game.draw_black_card
-      game.update_attributes(state: "playing")
       ActionCable.server.broadcast("game_#{game.id}", {
         type: "GAME_START",
         params: {
@@ -97,6 +103,8 @@ class GamesController < ApplicationController
       game = Game.find(params['id'])
       card = Card.find(params['card_id'])
 
+      if(game.state == "playing") then return invalid_request end
+
       game.winning_card(card)
       game.clear_played_cards
       game.refill_hands
@@ -104,24 +112,39 @@ class GamesController < ApplicationController
       card_tzar = game.next_card_tzar
       game.update_attributes(state: "playing")
 
-      ActionCable.server.broadcast("game_#{game.id}", {
-        type: "END_ROUND",
-        params: {
-          winner: card.user.id,
-          winning_card: card.id,
-          black_card: black_card,
-          card_tzar: card_tzar.id,
-          clear_table_at: Time.now.to_i + 15
-        }
-      })
+      if (game.winner)
+        ActionCable.server.broadcast("game_#{game.id}", {
+          type: "END_GAME",
+          params: {
+            winner: game.winner.id
+          }
+        })
+      else
+        ActionCable.server.broadcast("game_#{game.id}", {
+          type: "END_ROUND",
+          params: {
+            winner: card.user.id,
+            winning_card: card.id,
+            black_card: black_card,
+            card_tzar: card_tzar.id,
+            clear_table_at: Time.now.to_i + 15
+          }
+        })
+      end
     end
 
-    #TODO: exit function in front
+    #TODO: exit function in frontend
     def user_exit
       game = Game.find(params['id'])
       if current_user == game.card_tzar
         game.next_card_tzar
       end
       game.remove_user(current_user)
+    end
+
+    private
+    def invalid_request
+      render json: {success: false}
+      return false
     end
 end

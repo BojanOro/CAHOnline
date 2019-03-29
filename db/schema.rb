@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_182914) do
+ActiveRecord::Schema.define(version: 2019_03_29_183346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_182914) do
     t.integer "card_tzar_id"
     t.string "name"
     t.string "password"
-    t.integer "max_points"
+    t.integer "max_points", default: 10
   end
 
   create_table "users", force: :cascade do |t|
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_182914) do
     t.integer "game_id"
     t.integer "game_points"
     t.integer "join_order"
+    t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

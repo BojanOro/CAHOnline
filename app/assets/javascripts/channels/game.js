@@ -1,8 +1,11 @@
 $( document ).ready(function() {
+  if (typeof gameId == 'undefined') {
+      return false;
+  }
   App.game = App.cable.subscriptions.create(
     {
       channel: 'GameChannel',
-      game_id: document.getElementById('game_id').innerHTML
+      game_id: gameId
     }, {
     connected: function() {
       // Called when the subscription is ready for use on the server
@@ -33,6 +36,14 @@ $( document ).ready(function() {
 
         case "END_ROUND":
           msg_endRound(data);
+          break;
+
+        case "END_GAME":
+          msg_endGame(data);
+          break;
+
+        case "PLAYER_LEFT":
+          msg_playerLeft(data);
           break;
       }
     }
