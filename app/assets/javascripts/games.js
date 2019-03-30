@@ -1,6 +1,6 @@
 //======== Action Cable Messages =====/
 
-function msg_playerJoined(data){
+function msg_playerJoined(data) {
   var pid = data["params"]["id"];
   var playerObj = {
     email: data["params"]["email"],
@@ -8,86 +8,100 @@ function msg_playerJoined(data){
     order: data["params"]["order"],
     points: data["params"]["points"],
     played: data["params"]["played"]
-  }
+  };
   players[pid] = playerObj;
   renderPlayerList();
 }
 
-function msg_gameStart(data){
-  $("#startingScreen").hide();
+function msg_gameStart(data) {
+  $(".gameBox").animate({ height: 550 }, 200);
+  $(".game_area").fadeIn(750);
   gameState = "playing";
   getWhiteCards();
   getBlackCard();
   cardTzarId = data["params"]["card_tzar"];
 }
 
-function msg_cardPlay(data){
+function msg_cardPlay(data) {
   markCardPlayed(data["params"]["fromPlayer"]);
 
-  if(data["params"]["fromPlayer"] != playerId) {
+  if (data["params"]["fromPlayer"] != playerId) {
     addFakeWhiteCard(1);
   }
 
-  if(data["callback"]){
+  if (data["callback"]) {
     msg_cardTzar(data["callback"]);
   }
   // Check if tzar_choice is in there
 }
 
-function msg_cardTzar(data){
+function msg_cardTzar(data) {
   gameState = "picking";
   showPlayedCards(data["params"]["played_cards"]);
   enablePickingButtons();
 }
 
-function msg_endRound(data){
+function msg_endRound(data) {
   gameState = "scoring";
   markWinningCard(data["params"]["winning_card"]);
   addPoint(data["params"]["winner"]);
   var date = new Date();
   var timestamp = date.getTime();
-  setTimeout(function(){
+  setTimeout(function() {
     gameState = "playing";
     clearTable(data["params"]["card_tzar"]);
-  }, (data["params"]["clear_table_at"] * 1000) - timestamp);
+  }, data["params"]["clear_table_at"] * 1000 - timestamp);
 }
 
-function msg_endGame(data){
+function msg_endGame(data) {
   winner = players[data["params"]["winner"]];
-  alert("Game has ended. " + winner.email + " has won.")
+  alert("Game has ended. " + winner.email + " has won.");
 }
 
-function msg_playerLeft(data){
-  delete players[data["params"]["id"]]
+function msg_playerLeft(data) {
+  delete players[data["params"]["id"]];
   renderPlayerList();
 }
 
 //========= mo shit =========== //
 
-function renderPlayerList(){
+function renderPlayerList() {
   $("#playerList").empty();
-  for (id in players){
-    $("#playerList").append("<tr><td id='player_"+id+"'>" + players[id]["order"] + "-" + players[id]["email"] + " </td><td> " + players[id]["points"] + " </td><td> " + players[id]["played"] + " </td><td> " + (id == cardTzarId) + "</td></tr>");
+  for (id in players) {
+    $("#playerList").append(
+      "<tr><td id='player_" +
+        id +
+        "'>" +
+        players[id]["order"] +
+        "-" +
+        players[id]["email"] +
+        " </td><td> " +
+        players[id]["points"] +
+        " </td><td> " +
+        players[id]["played"] +
+        " </td><td> " +
+        (id == cardTzarId) +
+        "</td></tr>"
+    );
   }
 }
 
-
-function getBlackCard(){
-  if(gameState == "playing" || gameState == "picking"){
-    $.get("/games/" + gameId + "/black_card", function( data ) {
+function getBlackCard() {
+  if (gameState == "playing" || gameState == "picking") {
+    $.get("/games/" + gameId + "/black_card", function(data) {
       blackCard = data["card_template"];
       renderBlackCard();
     });
   }
 }
 
-function renderBlackCard(){
+function renderBlackCard() {
   document.getElementById("text").innerHTML = blackCard["text"];
 }
 
-function getWhiteCards(callback = ()=>{}){
-  if(gameState == "playing" || gameState == "picking"){
-    $.get("/games/" + gameId + "/white_cards", function( data ) {
+function getWhiteCards(callback = () => {}) {
+  if (gameState == "playing" || gameState == "picking") {
+    $.get("/games/" + gameId + "/white_cards", function(data) {
       whiteCards = data;
       renderWhiteCards();
       callback();
@@ -95,29 +109,41 @@ function getWhiteCards(callback = ()=>{}){
   }
 }
 
-function renderWhiteCards(){
+function renderWhiteCards() {
   var cards = "";
-  for(var i=0; i < whiteCards.length; i++){
-    cards += '<div class="card" id="card_' + whiteCards[i]["id"] + '">\
-      <div class="card-body">\
-        <p class="card-text">' + whiteCards[i]["card_template"]["text"] + '</p>\
-      </div>\
-    </div>'
+  for (var i = 0; i < whiteCards.length; i++) {
+    cards +=
+      '<div class="card" id="card_' + whiteCards[i]["id"] + '">\<div class="card-body">\ <p class="card-text">' + whiteCards[i]["card_template"]["text"] + "</p>\</div>\</div>";
+    if (gameState == "playing")
+      $(document).ready(function() {
+        $(".card-body").mouseenter(function() {
+          $(this).animate({
+            bottom: "10px"
+          });
+          $(this).css("box-shadow", "5px 5px 5px #888");
+        });
+        $(".card-body").mouseleave(function() {
+          $(this).animate({
+            bottom: "0px"
+          });
+          $(this).css("box-shadow", "0px 0px 0px");
+        });
+      });
   }
   $("#white-cards").html(cards);
   evaluateCardTzar();
 }
 
-function initCardDropListener(){
+function initCardDropListener() {
   $("#card-drop").droppable({
-    drop: function( event, ui ) {
-      var cardId = ui.draggable.attr('id').split("_")[1];
-      var cardText = ui.draggable.find('.card-text').html();
+    drop: function(event, ui) {
+      var cardId = ui.draggable.attr("id").split("_")[1];
+      var cardText = ui.draggable.find(".card-text").html();
       $("#card_" + cardId).remove();
       addPlayedCard(cardId, cardText);
 
-      $.get("/games/" + gameId + "/playcard/" + cardId, function( data ) {
-        if(!data["success"]){
+      $.get("/games/" + gameId + "/playcard/" + cardId, function(data) {
+        if (!data["success"]) {
           console.error(data["error"]);
         }
       });
@@ -125,103 +151,126 @@ function initCardDropListener(){
   });
 }
 
-function addPlayedCard(cardId, cardText){
-  if(cardId == -1) { return false }
+function addPlayedCard(cardId, cardText) {
+  if (cardId == -1) {
+    return false;
+  }
   turnOffDragging();
-  $("#card-drop").append('<div class="card" id="card_' + cardId + '">\
+  $("#card-drop").append(
+    '<div class="card" id="card_' +
+      cardId +
+      '">\
     <div class="card-body">\
-      <p class="card-text">' + cardText + '</p>\
+      <p class="card-text">' +
+      cardText +
+      "</p>\
     </div>\
-  </div>');
+  </div>"
+  );
 }
 
-function addFakeWhiteCard(amount){
-  for(var i=0; i<amount; i++){
-    $("#face-down-whites").append('<div class="card">\
+function addFakeWhiteCard(amount) {
+  for (var i = 0; i < amount; i++) {
+    $("#face-down-whites").append(
+      '<div class="card">\
       <div class="card-body">\
         <p class="card-text">Blank</p>\
       </div>\
-    </div>');
+    </div>'
+    );
   }
 }
 
-function turnOffDragging(){
+function turnOffDragging() {
   console.log(whiteCards);
-  for(var i=0; i < whiteCards.length; i++){
-    $("#card_" + whiteCards[i]["id"]).draggable({ revert: "invalid", disabled: true });
+  for (var i = 0; i < whiteCards.length; i++) {
+    $("#card_" + whiteCards[i]["id"]).draggable({
+      revert: "invalid",
+      disabled: true
+    });
   }
 }
 
-function turnOnDragging(){
-  for(var i=0; i < whiteCards.length; i++){
-    $("#card_" + whiteCards[i]["id"]).draggable({ revert: "invalid", disabled: false });
+function turnOnDragging() {
+  for (var i = 0; i < whiteCards.length; i++) {
+    $("#card_" + whiteCards[i]["id"]).draggable({
+      revert: "invalid",
+      disabled: false
+    });
   }
 }
 
-function markCardPlayed(playerId){
+function markCardPlayed(playerId) {
   players[id].played = true;
   renderPlayerList();
 }
 
-function evaluateCardTzar(){
-  if(playerId == cardTzarId) {
-      // Start button
-      if(gameState == "setup"){
-        $(".startButton").show();
-      }
-      else{
-        $(".startButton").hide();
-      }
+function evaluateCardTzar() {
+  if (playerId == cardTzarId) {
+    // Start button
+    if (gameState == "setup") {
+      $(".startButton").show();
+    } else {
+      $(".startButton").hide();
+    }
 
-      turnOffDragging();
-  }
-  else {
+    turnOffDragging();
+  } else {
     turnOnDragging();
   }
 }
 
-function showPlayedCards(cards){
+function showPlayedCards(cards) {
   $("#card-drop").hide();
-  $("#card-drop").find(".card").remove();
+  $("#card-drop")
+    .find(".card")
+    .remove();
   $("#face-down-whites").empty();
-  for(var i=0; i<cards.length; i++) {
-    $("#face-down-whites").append('<div class="card" id="card_' + cards[i].id + '">\
+  for (var i = 0; i < cards.length; i++) {
+    $("#face-down-whites").append(
+      '<div class="card" id="card_' +
+        cards[i].id +
+        '">\
       <div class="card-body">\
-        <p class="card-text">' + cards[i]["card_template"].text + '</p>\
-        <button class="tzar-picker btn btn-primary" onClick="tzarPick(' + cards[i].id + ')" style="display: none">Pick</button>\
+        <p class="card-text">' +
+        cards[i]["card_template"].text +
+        '</p>\
+        <button class="tzar-picker btn btn-primary" onClick="tzarPick(' +
+        cards[i].id +
+        ')" style="display: none">Pick</button>\
       </div>\
-    </div>');
+    </div>'
+    );
   }
 }
 
-function enablePickingButtons(){
-  if(cardTzarId == playerId && gameState == "picking"){
+function enablePickingButtons() {
+  if (cardTzarId == playerId && gameState == "picking") {
     $(".tzar-picker").show();
   }
 }
 
-function tzarPick(cardId){
-  $.get("/games/" + gameId + "/tzarchoice/" + cardId, function( data ) {
-  });
+function tzarPick(cardId) {
+  $.get("/games/" + gameId + "/tzarchoice/" + cardId, function(data) {});
 }
 
-function markWinningCard(cardId){
+function markWinningCard(cardId) {
   $("#card_" + cardId).css("background-color", "blue");
 }
 
-function addPoint(playerId){
+function addPoint(playerId) {
   players[playerId]["points"] += 1;
   renderPlayerList();
 }
 
-function resetCardSubmissions(){
+function resetCardSubmissions() {
   for (key in players) {
     players[key]["played"] = false;
   }
   renderPlayerList();
 }
 
-function clearTable(ctId){
+function clearTable(ctId) {
   getBlackCard();
   getWhiteCards();
   $("#face-down-whites").empty();

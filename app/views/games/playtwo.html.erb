@@ -1,3 +1,4 @@
+
 Game: <span id="game_id"><%= current_user.game.id %></span> Player:
 <span id="player_id"><%= current_user.id %></span> Join order:
 <span id="player_join_order"><%= current_user.join_order %></span>
@@ -9,20 +10,23 @@ Game: <span id="game_id"><%= current_user.game.id %></span> Player:
   </div>
 
   <div class="mainText clear" id="text">
+    <span class="startbutton">
     <button class="btn btn-outline-light btn-lg" onClick="startGameButton()">
       Start Game
     </button>
+  </span>
   </div>
 
   <div class="game_area" id="game_area">
     <br />
-    <div class="row">
+    <div class="row" id="startingScreen">
       <div class="deck-drop" id="card-drop" style="opacity: 50;">Drag Card Here</div>
       <div id="face-down-whites"></div>
     </div>
   </div>
 
 </div>
+<br>
 <div class="row" id="white-cards"></div>
 
 <br /><br />
@@ -38,6 +42,7 @@ Game: <span id="game_id"><%= current_user.game.id %></span> Player:
     </tbody>
   </table>
 </div>
+<button class="btn btn-outline-dark btn-lg" onClick="">Leave Game</button>
 <script>
   var playerId = <%= current_user.id %>;
   var cardTzarId = <%= @cardTzar %>;
@@ -54,8 +59,27 @@ Game: <span id="game_id"><%= current_user.game.id %></span> Player:
         order: <%= player.join_order %>,
         played: <%= player.played_card? %>,
       },
+
     <% end %>
   };
+  window.onload = function(){
+    $(".startButton").hide();
+    if(playerId == cardTzarId){
+      $(".startButton").show();
+    }else{
+      document.getElementById("text").innerHTML = "Wait for Card Tzar to start game.";
+      $(".startButton").fadeIn(750);
+    }
+    $(".gameBox").css("height", "300px");
+    $(".game_area").hide();
+
+    if(gameState != "setup"){
+      $(".gameBox").css("height", "550" );
+      $(".game_area").fadeIn(750);
+    }
+    
+  }
+
 
   initCardDropListener();
 
@@ -73,7 +97,10 @@ Game: <span id="game_id"><%= current_user.game.id %></span> Player:
   <% end %>
 
   function startGameButton(){
-    $.get("/games/" + gameId + "/startgame", function( data ) {
-    });
+
+      $.get("/games/" + gameId + "/startgame", function( data ) {
+        
+      });
+
   }
 </script>
