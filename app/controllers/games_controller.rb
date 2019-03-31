@@ -53,8 +53,6 @@ class GamesController < ApplicationController
     @cardTzar = game.card_tzar
     @game = game
     #@played_cards = User.get_played_card
-
-    render "playtwo"
   end
 
   #after card tzar presses start
