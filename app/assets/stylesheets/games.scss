@@ -36,6 +36,8 @@
 
 #face-down-whites {
   display: flex;
+  justify-content: space-evenly;
+  width: 100%;
 }
 .container {
   width: 75%;
@@ -90,6 +92,7 @@
   position: sticky;
   top: 0;
   background-color: black;
+  z-index: 999;
 }
 
 #white-cards{

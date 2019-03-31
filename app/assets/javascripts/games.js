@@ -145,7 +145,7 @@ function addPlayedCard(cardId, cardText) {
     return false;
   }
   turnOffDragging();
-  $("#card-drop").append(
+  $("#card-drop").html(
     '<div class="card" id="card_' +
       cardId +
       '">\

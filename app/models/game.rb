@@ -100,7 +100,7 @@ class Game < ApplicationRecord
       self.users << user
 
       #Deal them a hand if the game has already started when they join
-      if self.state == "playing"
+      if self.state != "setup"
         cards = self.white_deck.limit(7)
         cards.update_all(user_id: user.id, status: "hand")
       end
