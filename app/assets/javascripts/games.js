@@ -57,7 +57,11 @@ function msg_endRound(data) {
 
 function msg_endGame(data) {
   winner = players[data["params"]["winner"]];
-  alert("Game has ended. " + winner.email + " has won.");
+  $("#winnerModalBody").html("Game has ended. " + winner.name + " has won.");
+  $("#winnerModal").modal({
+    backdrop: 'static',
+    keyboard: false
+  });
 }
 
 function msg_playerLeft(data) {
