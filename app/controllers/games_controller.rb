@@ -113,7 +113,7 @@ class GamesController < ApplicationController
         type: "TZAR_CHOICE",
         params: {
           card_tzar: game.card_tzar.id,
-          played_cards: game.white_played
+          played_cards: game.white_played.order('random()')
         }
       }
     end
