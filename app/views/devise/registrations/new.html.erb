@@ -1,48 +1,41 @@
 <head>
 <%= stylesheet_link_tag 'login' %>
 </head>
-<h2>Sign up</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
-  <div class="loginContainer">
-    <h1>Register</h1> 
-    <div class="inputContainer">
-      <input type="text" placeholder="Name..." name="name" required>
-      <input type="text" placeholder="E-mail..." name="email" required>
-      <input type="text" placeholder="Username..." name="uname" required>
-      <div class="pass">
-          <input type="password" placeholder="Password..." name="pass" required>
-      </div>
-      <button class="btn btn-outline-light">REGISTER</button>
-    </div>
-  </div>
+  <div class="signupContainer">
+    <h1 class="loginText">Register</h1> 
+
   <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <%= f.label :email%><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
   </div>
 
   <div class="field">
-    <%= f.label :password %>
+    <%= f.label :password%>
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
+    <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
   </div>
 
   <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    <%= f.label :password_confirmation%><br />
+    <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
   </div>
 
   <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.label :name%><br />
+    <%= f.text_field :name, class: "input" %>
   </div>
 
   <div class="actions">
-    <%= f.submit "Sign up" %>
+    <%= f.submit "Sign up", class: "btn btn-outline-light loginbutton"%>
   </div>
-<% end %>
 
+<% end %>
+<div class="inputContainer">
 <%= render "devise/shared/links" %>
+</div>
+</div>

@@ -1,62 +1,60 @@
-html{
-    font-family: Tahoma, Geneva, sans-serif;
-}
-body{
-    background-color: rgb(221, 235, 255);
-    font-family: Tahoma, Geneva, sans-serif;
-    //width:980px;
-    margin:auto;
-    height:auto;
-    overflow: auto;
-}
-#loginform {
-    position: absolute;
-    background-color: white;
-    top: 10%;
-    left: 40%;
-    width: 30%;
-    text-align: center;
-  padding: 10px;
-  box-shadow: 5px 10px 18px #888888;
-  border-radius: 8px;
-}
-#loginform *{
-   padding: 10px;
-}
 
-#logintext {
-    font-size: 25px;
-}
 
-.input {
-    width: 80%;
+.loginContainer
+{
+    width: 35%;
+    position: relative;
+    margin: 0 auto 0 auto;
+    background-color: black;
+    padding: 30px; 
     border-radius: 8px;
+    transform: translateY(26%);
 }
-.loginbutton {
-	position: relative;
-	display: inline-block;
-    font-size: 20px;
-    width: 125px;
-    top: -25px;
-	padding: 20px 18px;
-	color: white;
-	margin: 20px 10px 10px;
-	border-radius: 6px;
-	text-align: center;
-	transition: top .01s linear;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
-    background-color: #cb99c5;
-	box-shadow: 0 0 0 1px #cb99c5 inset,
-				0 0 0 2px rgba(255,255,255,0.15) inset,
-				0 8px 0 0 rgba(189, 142, 183, .7),
-				0 8px 0 1px rgba(0,0,0,.4),
-				0 8px 8px 1px rgba(0,0,0,0.5);
+.signupContainer
+{
+    width: 35%;
+    position: relative;
+    margin: 0 auto 0 auto;
+    background-color: black;
+    padding: 30px; 
+    border-radius: 8px;
+    transform: translateY(18%);
 }
-.loginbutton:hover    {background-color: #D19ECB;}
+.loginText
+{
+    color: white;
+    text-align: center;
+    font-family: "Heebo";
+    font-size: 40px;
+}
 
-.loginbutton:active {
-    top: -19px;
-	box-shadow: 0 0 0 1px #cb99c5 inset,
-				0 0 0 2px rgba(255,255,255,0.15) inset,
-				0 0 0 1px rgba(0,0,0,0.4);
+.input 
+{
+    border: inset;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 20px !important; 
+    margin-top: 10px !important;
+}
+
+.inputContainer
+{
+    text-align: center;
+}
+
+.loginbutton
+{
+    width: 100%;
+    padding: 10px !important;
+    border-radius: 8px !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+.field{
+    color:white;
+}
+.remember{
+    float:left;
 }
