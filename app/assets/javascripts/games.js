@@ -206,6 +206,7 @@ function evaluateCardTzar() {
 
 function showPlayedCards(cards) {
   $("#card-drop").hide();
+  $("#card-drop").html("Drag Card Here");
   $("#card-drop")
     .find(".card")
     .remove();
