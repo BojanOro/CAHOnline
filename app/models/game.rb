@@ -54,7 +54,11 @@ class Game < ApplicationRecord
     if self.users.include?(current_user)
       return current_user.join_order
     else
-      return self.users.order(join_order: :asc).last.join_order + 1
+      if self.users.order(join_order: :asc).count == 0
+        return 1
+      else
+        return self.users.order(join_order: :asc).last.join_order + 1
+      end
     end
   end
 
