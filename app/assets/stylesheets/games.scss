@@ -11,6 +11,10 @@
   margin-right: auto;
   margin-left: auto;
   color:black;
+
+  .card-button{
+    text-align: center;
+  }
 }
 
 .deck-drop {
@@ -53,7 +57,7 @@
 .display{
   width:150px;
   height: 200px;
-  border:1px solid black; 
+  border:1px solid black;
   background-color: white;
   margin-top: 25px;
   margin-right: auto;
@@ -65,34 +69,34 @@
     transition: width 2.5s ease !important;
 }
 .gameBox{
-  margin-top: 20px;
-  height:550px;
-  width: 1350px;
+  height: 300px;
   background-color: black;
-  margin-right: auto;
-  margin-left: auto;
   color:white;
 }
 
 .gameBoxHeader{
+  display: flex;
+  justify-content: space-between;
   padding:20px 50px;
-}
-.lobbyNumber{
-  float:right;
-}
-.cardTzar{
-  float:left;
 }
 .mainText{
   clear:both;
   text-align: center;
   font-weight: bold;
   font-size: 18pt;
-  margin-top: 80px;
-  margin-bottom: 80px;
+  margin-top: 30px;
+  margin-bottom: 50px;
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   background-color: black;
 }
 
+#white-cards{
+  .card:hover{
+    &:not(.ui-draggable-disabled){
+      box-shadow: 3px 3px 15px 0px #888;
+      margin-top: -15px;
+    }
+  }
+}

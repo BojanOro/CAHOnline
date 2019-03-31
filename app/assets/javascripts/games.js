@@ -46,6 +46,7 @@ function msg_endRound(data) {
   gameState = "scoring";
   markWinningCard(data["params"]["winning_card"]);
   addPoint(data["params"]["winner"]);
+  announceWinner(data["params"]["winner"]);
   var date = new Date();
   var timestamp = date.getTime();
   setTimeout(function() {
@@ -60,6 +61,8 @@ function msg_endGame(data) {
 }
 
 function msg_playerLeft(data) {
+  cardTzarId = data["params"]["cardTzar"];
+  evaluateCardTzar();
   delete players[data["params"]["id"]];
   renderPlayerList();
 }
@@ -75,7 +78,7 @@ function renderPlayerList() {
         "'>" +
         players[id]["order"] +
         "-" +
-        players[id]["email"] +
+        players[id]["name"] +
         " </td><td> " +
         players[id]["points"] +
         " </td><td> " +
@@ -115,21 +118,6 @@ function renderWhiteCards() {
   for (var i = 0; i < whiteCards.length; i++) {
     cards +=
       '<div class="card" id="card_' + whiteCards[i]["id"] + '">\<div class="card-body">\ <p class="card-text">' + whiteCards[i]["card_template"]["text"] + "</p>\</div>\</div>";
-    if (gameState == "playing")
-      $(document).ready(function() {
-        $(".card-body").mouseenter(function() {
-          $(this).animate({
-            bottom: "10px"
-          });
-          $(this).css("box-shadow", "5px 5px 5px #888");
-        });
-        $(".card-body").mouseleave(function() {
-          $(this).animate({
-            bottom: "0px"
-          });
-          $(this).css("box-shadow", "0px 0px 0px");
-        });
-      });
   }
   $("#white-cards").html(cards);
   evaluateCardTzar();
@@ -207,8 +195,8 @@ function markCardPlayed(playerId) {
 }
 
 function evaluateCardTzar() {
+  $(".cardTzarContent").html(players[cardTzarId].name)
   if (playerId == cardTzarId) {
-    
     $(".deck-drop").hide();
     turnOffDragging();
   } else {
@@ -231,9 +219,11 @@ function showPlayedCards(cards) {
         <p class="card-text">' +
         cards[i]["card_template"].text +
         '</p>\
-        <button class="tzar-picker btn btn-primary" onClick="tzarPick(' +
-        cards[i].id +
-        ')" style="display: none">Pick</button>\
+        <div class="card-button">\
+          <button class="tzar-picker btn btn-primary" onClick="tzarPick(' +
+          cards[i].id +
+          ')" style="display: none">Pick</button>\
+        </div>\
       </div>\
     </div>'
     );
@@ -251,12 +241,16 @@ function tzarPick(cardId) {
 }
 
 function markWinningCard(cardId) {
-  $("#card_" + cardId).css("background-color", "blue");
+  $("#card_" + cardId).css("box-shadow", "0px 0px 20px 7px #52aeff");
 }
 
 function addPoint(playerId) {
   players[playerId]["points"] += 1;
   renderPlayerList();
+}
+
+function announceWinner(playerId){
+  $("#text").html(players[playerId]['name'] + " has been awarded one point!");
 }
 
 function resetCardSubmissions() {

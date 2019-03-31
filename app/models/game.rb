@@ -39,14 +39,14 @@ class Game < ApplicationRecord
 
   def next_card_tzar
     if self.card_tzar == nil
-      self.update_attributes(card_tzar: self.users.find_by(join_order: 1))
+      next_tzar = self.users.order(join_order: :asc).first
     else
-      next_tzar_order = self.card_tzar.join_order + 1
-      # We need to loop back if index is too high
-      if next_tzar_order > self.users.count then next_tzar_order = 1 end
-      next_tzar = self.users.find_by(join_order: next_tzar_order)
-      self.update_attributes(card_tzar: next_tzar)
+      next_tzar = self.users.order(join_order: :asc).where("join_order > ?", self.card_tzar.join_order)&.first
+      if(next_tzar == nil)
+        next_tzar = self.users.order(join_order: :asc).first
+      end
     end
+    self.update_attributes(card_tzar: next_tzar)
     return self.card_tzar
   end
 
@@ -54,7 +54,11 @@ class Game < ApplicationRecord
     if self.users.include?(current_user)
       return current_user.join_order
     else
-      return self.users.count + 1
+      if self.users.order(join_order: :asc).count == 0
+        return 1
+      else
+        return self.users.order(join_order: :asc).last.join_order + 1
+      end
     end
   end
 
@@ -126,7 +130,8 @@ class Game < ApplicationRecord
     ActionCable.server.broadcast("game_#{self.id}", {
       type: "PLAYER_LEFT",
       params: {
-        id: player.id
+        id: player.id,
+        cardTzar: self.card_tzar&.id || -1
       }
     })
   end
