@@ -27,13 +27,18 @@ class User < ApplicationRecord
     self.get_played_card != nil
   end
 
+  def get_name
+    self.name || self.email
+  end
+
   def as_json(options)
     {
       email: self.email,
-      name: self.name || self.email,
+      name: self.get_name,
       points: self.game_points,
       id: self.id,
-      order: self.join_order
+      order: self.join_order,
+      played: self.played_card?
     }
   end
 end

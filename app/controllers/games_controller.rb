@@ -41,6 +41,7 @@ class GamesController < ApplicationController
       type: "PLAYER_JOINED",
       params: {
         email: current_user.email,
+        name: current_user.get_name,
         points: current_user.game_points,
         id: current_user.id,
         order: current_user.join_order,
@@ -49,7 +50,7 @@ class GamesController < ApplicationController
     })
 
     @players = game.users
-    @cardTzar = game.card_tzar&.id || -1
+    @cardTzar = game.card_tzar
     @game = game
     #@played_cards = User.get_played_card
 

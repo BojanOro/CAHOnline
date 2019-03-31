@@ -1,23 +1,19 @@
-
-Game: <span id="game_id"><%= current_user.game.id %></span> Player:
-<span id="player_id"><%= current_user.id %></span> Join order:
-<span id="player_join_order"><%= current_user.join_order %></span>
-
 <div class="gameBox">
   <div class="gameBoxHeader">
-    <div class="cardTzar">Card Tzar: <%= @cardTzar %></div>
-    <div class="lobbyNumber">Lobby Number: <%= current_user.game.id %></div>
+    <div class="leaveButton"><button class="btn btn-outline-light" onClick="leaveGameButton()">Leave Game</button></div>
+    <div class="cardTzar">Card Tzar: <span class="cardTzarContent"><%= @cardTzar.name || @cardTzar.email %></span></div>
+    <div class="lobbyNumber">Lobby Name: <%= @game.name %></div>
   </div>
 
   <div class="mainText clear" id="text">
-    <span class="startbutton">
+    <span class="startButton" style="display: none">
     <button class="btn btn-outline-light btn-lg" onClick="startGameButton()">
       Start Game
     </button>
   </span>
   </div>
 
-  <div class="game_area" id="game_area">
+  <div class="game_area" id="game_area" style="display: none">
     <br />
     <div class="row" id="startingScreen">
       <div class="deck-drop" id="card-drop" style="opacity: 50;">Drag Card Here</div>
@@ -42,10 +38,9 @@ Game: <span id="game_id"><%= current_user.game.id %></span> Player:
     </tbody>
   </table>
 </div>
-<button class="btn btn-outline-dark btn-lg" onClick="">Leave Game</button>
 <script>
   var playerId = <%= current_user.id %>;
-  var cardTzarId = <%= @cardTzar %>;
+  var cardTzarId = <%= @cardTzar.id %>;
   var gameId = <%= @game.id %>;
   var whiteCards = [];
   var blackCard;
@@ -55,6 +50,7 @@ Game: <span id="game_id"><%= current_user.game.id %></span> Player:
     <% @players.each do |player| %>
       <%= player.id %>: {
         email: "<%= player.email %>",
+        name: "<%= player.get_name %>",
         points: <%= player.game_points %>,
         order: <%= player.join_order %>,
         played: <%= player.played_card? %>,
@@ -63,44 +59,48 @@ Game: <span id="game_id"><%= current_user.game.id %></span> Player:
     <% end %>
   };
   window.onload = function(){
-    $(".startButton").hide();
-    if(playerId == cardTzarId){
-      $(".startButton").show();
-    }else{
-      document.getElementById("text").innerHTML = "Wait for Card Tzar to start game.";
-      $(".startButton").fadeIn(750);
+    if(gameState == "setup"){
+      if(playerId == cardTzarId){
+        $(".startButton").show();
+      }else{
+        $("#text").html("Waiting for Card Tzar to start game.");
+        $(".startButton").fadeIn(750);
+      }
+      $(".game_area").hide();
     }
-    $(".gameBox").css("height", "300px");
-    $(".game_area").hide();
-
     if(gameState != "setup"){
-      $(".gameBox").css("height", "550" );
-      $(".game_area").fadeIn(750);
+      $(".gameBox").animate({ height: 485 }, 200, "swing", function() {
+        getWhiteCards(function(){
+          addPlayedCard(<%= current_user.get_played_card&.id || -1 %>, "<%= current_user.get_played_card&.text %>");
+          enablePickingButtons();
+        });
+        getBlackCard();
+        <% if @game.state != "picking" %>
+          addFakeWhiteCard(<%= @game.white_played.where.not(user: current_user).count %>);
+        <% end %>
+        $(".game_area").fadeIn(750);
+      });
     }
-    
   }
 
 
   initCardDropListener();
-
   evaluateCardTzar();
   renderPlayerList();
-  getWhiteCards(function(){
-    addPlayedCard(<%= current_user.get_played_card&.id || -1 %>, "<%= current_user.get_played_card&.text %>");
-    enablePickingButtons();
-  });
-  getBlackCard();
-  addFakeWhiteCard(<%= @game.white_played.where.not(user: current_user).count %>);
+
 
   <% if @game.state == "picking" %>
     showPlayedCards(<%= @game.white_played.to_json.html_safe %>)
   <% end %>
 
   function startGameButton(){
+    $.get("/games/" + gameId + "/startgame", function( data ) {
+    });
+  }
 
-      $.get("/games/" + gameId + "/startgame", function( data ) {
-        
-      });
-
+  function leaveGameButton(){
+    $.get("/games/" + gameId + "/leave_game", function( data ) {
+      window.location.href = "/";
+    });
   }
 </script>
