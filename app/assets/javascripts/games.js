@@ -75,17 +75,11 @@ function renderPlayerList() {
     $("#playerList").append(
       "<tr><td id='player_" +
         id +
-        "'>" +
-        players[id]["order"] +
-        "-" +
+        "'>"+
         players[id]["name"] +
         " </td><td> " +
         players[id]["points"] +
-        " </td><td> " +
-        players[id]["played"] +
-        " </td><td> " +
-        (id == cardTzarId) +
-        "</td></tr>"
+        " </td></tr>"
     );
   }
 }
