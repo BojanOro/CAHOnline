@@ -1,7 +1,38 @@
-<div id="leaderboard">
-  <% User.all.each do |user| %>
-  <%= user.name || user.email %>
-  <%= user.game_points || 0 %>
-  <br>
-  <% end %>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+  <a class="navbar-brand" href="#">CAHOnline!</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/leaderboard">Leaderboard <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+         <%= link_to('Logout', destroy_user_session_path, method: :delete, class: "nav-link" ) %>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="table-responsive">
+  <table class="table leaderboards" style="width:60%; margin:0 auto 0 auto;">
+  	<thead class="thead-dark">
+      <tr>
+  		<th scope="col">Place</th>
+  		<th scope="col">Name</th>
+  		<th scope="col">Total Points</th>
+      </tr>
+      <tbody>
+      	<% User.all.order(total_points: :desc).each_with_index do |user, i| %>
+      	<tr>
+      	  <td><%= i+1 %></td>
+      	  <td><%= user.name || user.email %></td>
+      	  <td><%= user.game_points || 0 %></td>
+      </tbody>
+    <br>
+    <% end %>
+  </table>
 </div>

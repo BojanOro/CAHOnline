@@ -41,6 +41,7 @@ class GamesController < ApplicationController
       type: "PLAYER_JOINED",
       params: {
         email: current_user.email,
+        name: current_user.get_name,
         points: current_user.game_points,
         id: current_user.id,
         order: current_user.join_order,
@@ -49,11 +50,9 @@ class GamesController < ApplicationController
     })
 
     @players = game.users
-    @cardTzar = game.card_tzar&.id || -1
+    @cardTzar = game.card_tzar
     @game = game
     #@played_cards = User.get_played_card
-
-    render "playtwo"
   end
 
   #after card tzar presses start
@@ -112,7 +111,7 @@ class GamesController < ApplicationController
         type: "TZAR_CHOICE",
         params: {
           card_tzar: game.card_tzar.id,
-          played_cards: game.white_played
+          played_cards: game.white_played.order('random()')
         }
       }
     end
@@ -149,7 +148,6 @@ class GamesController < ApplicationController
           winning_card: card.id,
           black_card: black_card,
           card_tzar: card_tzar.id,
-          clear_table_at: Time.now.to_i + 15
         }
       })
     end

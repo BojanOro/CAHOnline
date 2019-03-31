@@ -1,55 +1,130 @@
-Game: <div id="game_id"><%= current_user.game.id %></div>
-Player: <div id="player_id"><%= current_user.id %></div>
-Join order: <div id="player_join_order"><%= current_user.join_order %></div>
+<div class="gameBox">
+  <div class="gameBoxHeader">
+    <div class="leaveButton"><button class="btn btn-outline-light" onClick="leaveGameButton()">Leave Game</button></div>
+    <div class="cardTzar">Card Tzar: <span class="cardTzarContent"><%= @cardTzar.name || @cardTzar.email %></span></div>
+    <div class="lobbyNumber">Lobby Name: <%= @game.name %></div>
+  </div>
 
-<div class="row">
-  <div class="deck-drop" id="drop_1">
+  <div class="mainText clear" id="text">
+    <span class="startButton" style="display: none">
+    <button class="btn btn-outline-light btn-lg" onClick="startGameButton()">
+      Start Game
+    </button>
+  </span>
+  </div>
+
+  <div class="game_area" id="game_area" style="display: none">
+    <br />
+    <div class="row" id="startingScreen">
+      <div class="deck-drop" id="card-drop" style="opacity: 50;">Drag Card Here</div>
+      <div id="face-down-whites"></div>
+    </div>
+  </div>
+
+</div>
+<br>
+<div class="row" id="white-cards"></div>
+
+<br /><br />
+<div class="row table-responsive">
+  <table class="table" id="table">
+    <thead>
+      <th>Player</th>
+      <th>Score</th>
+    </thead>
+    <tbody id="playerList">
+    </tbody>
+  </table>
+</div>
+<div class="modal fade hide" id="winnerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Winner!</h5>
+      </div>
+      <div class="modal-body">
+        <div id="winnerModalBody">
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="tableWinners">
+            <thead>
+              <th>Player</th>
+              <th>Score</th>
+            </thead>
+            <tbody id="playerListWinner">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-block btn-outline-dark" onClick="leaveGameButton()">Leave Game</button>
+      </div>
+    </div>
   </div>
 </div>
-
-<div class="row">
-  <div class="card" id="card_1">
-    <div class="card-body">
-      <p class="card-text">Court-ordered rehab.</p>
-    </div>
-  </div>
-
-  <div class="card" id="card_2">
-    <div class="card-body">
-      <p class="card-text">Not giving a shit about the Third World.</p>
-    </div>
-  </div>
-
-  <div class="card" id="card_3">
-    <div class="card-body">
-      <p class="card-text">Bingeing and purging.</p>
-    </div>
-  </div>
-
-  <div class="card" id="card_4">
-    <div class="card-body">
-      <p class="card-text">A tiny horse.</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-body bg-dark">
-      <p class="card-text">What ended my last relationship?</p>
-    </div>
-  </div>
-</div>
-
 <script>
-$("#card_1").draggable({ revert: "invalid" });
-$("#card_2").draggable({ revert: "invalid" });
-$("#card_3").draggable({ revert: "invalid" });
-$("#card_4").draggable({ revert: "invalid" });
+  var playerId = <%= current_user.id %>;
+  var cardTzarId = <%= @cardTzar.id %>;
+  var gameId = <%= @game.id %>;
+  var whiteCards = [];
+  var blackCard;
+  var gameState = "<%= @game.state %>";
 
-$("#drop_1").droppable({
-      drop: function( event, ui ) {
-        var cardId = ui.draggable.attr('id').split("_")[1];
-        moveCard(cardId, 1);
+  var players = {
+    <% @players.each do |player| %>
+      <%= player.id %>: {
+        email: "<%= player.email %>",
+        name: "<%= player.get_name %>",
+        points: <%= player.game_points %>,
+        order: <%= player.join_order %>,
+        played: <%= player.played_card? %>,
+      },
+
+    <% end %>
+  };
+  window.onload = function(){
+    if(gameState == "setup"){
+      if(playerId == cardTzarId){
+        $(".startButton").show();
+      }else{
+        $("#text").html("Waiting for Card Tzar to start game.");
+        $(".startButton").fadeIn(750);
       }
-    });
+      $(".game_area").hide();
+    }
+    if(gameState != "setup"){
+      $(".gameBox").animate({ height: 485 }, 200, "swing", function() {
+        getWhiteCards(function(){
+          addPlayedCard(<%= current_user.get_played_card&.id || -1 %>, "<%= current_user.get_played_card&.text %>");
+          enablePickingButtons();
+        });
+        getBlackCard();
+        <% if @game.state != "picking" %>
+          addFakeWhiteCard(<%= @game.white_played.where.not(user: current_user).count %>);
+        <% end %>
+        $(".game_area").fadeIn(750);
+      });
+    }
+  }
 
+
+  initCardDropListener();
+  evaluateCardTzar();
+  renderPlayerList();
+
+
+  <% if @game.state == "picking" %>
+    showPlayedCards(<%= @game.white_played.to_json.html_safe %>)
+  <% end %>
+
+  function startGameButton(){
+    $.get("/games/" + gameId + "/startgame", function( data ) {
+    });
+  }
+
+  function leaveGameButton(){
+    $.get("/games/" + gameId + "/leave_game", function( data ) {
+      window.location.href = "/";
+    });
+  }
 </script>

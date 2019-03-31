@@ -2,31 +2,36 @@
 <head>
 <%= stylesheet_link_tag 'login' %>
 </head>
-<div id="loginform">
-<div id="logintext">Sign in</div>
 
+
+<div class="loginContainer">
+  <h1 class="loginText"> Login </h1>
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+
   <div class="field">
   <br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", class: "input" %>
-    
+    <%= f.label :email%><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
   </div>
   <div class="field">
   <br />
-    <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", class: "input"%>
+    <%= f.label :password%>
+    <%= f.password_field :password, autocomplete: "current-password",  class: "input"%>
   </div>
 
   <% if devise_mapping.rememberable? %>
-    <div class="field">
+    <div class="field remember">
       <%= f.check_box :remember_me %>
       <%= f.label :remember_me %>
     </div>
   <% end %>
 
   <div class="actions">
-    <%= f.submit :"Log in", class: "loginbutton" %>
+    <%= f.submit :"Log in", class: "btn btn-outline-light loginbutton" %>
   </div>
-<% end %>
 
+<% end %>
+<div class="inputContainer">
 <%= render "devise/shared/links" %>
+</div>
 </div>
