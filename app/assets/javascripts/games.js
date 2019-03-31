@@ -58,6 +58,17 @@ function msg_endRound(data) {
 function msg_endGame(data) {
   winner = players[data["params"]["winner"]];
   $("#winnerModalBody").html("Game has ended. " + winner.name + " has won.");
+  for (id in players) {
+    $("#playerListWinner").append(
+      "<tr><td id='player_" +
+        id +
+        "'>"+
+        players[id]["name"] +
+        " </td><td> " +
+        players[id]["points"] +
+        " </td></tr>"
+    );
+  }
   $("#winnerModal").modal({
     backdrop: 'static',
     keyboard: false
