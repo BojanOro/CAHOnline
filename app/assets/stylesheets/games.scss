@@ -4,6 +4,7 @@
 
 
 .card {
+  font-family: 'Heebo', sans-serif;
   font-size: 15pt;
   font-weight: bolder;
   height: 250px;
@@ -11,6 +12,7 @@
   margin-right: auto;
   margin-left: auto;
   color:black;
+  text-align: left;
 
   .card-button{
     text-align: center;
@@ -22,10 +24,9 @@
   width: 190px;
   background-color: #edecec;
   border: 1px dotted black;
-
+  margin-right: 25px;
   color:black;
   text-align: center;
-  padding-top: 20px;
   font-size: 18pt;
   font-weight: bolder;
 }
@@ -36,6 +37,9 @@
 
 #face-down-whites {
   display: flex;
+  .card{
+    margin-right: 20px
+  }
 }
 .container {
   width: 75%;
@@ -90,6 +94,7 @@
   position: sticky;
   top: 0;
   background-color: black;
+  z-index: 999;
 }
 
 #white-cards{

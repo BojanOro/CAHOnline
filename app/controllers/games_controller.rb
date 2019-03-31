@@ -53,8 +53,6 @@ class GamesController < ApplicationController
     @cardTzar = game.card_tzar
     @game = game
     #@played_cards = User.get_played_card
-
-    render "playtwo"
   end
 
   #after card tzar presses start
@@ -113,7 +111,7 @@ class GamesController < ApplicationController
         type: "TZAR_CHOICE",
         params: {
           card_tzar: game.card_tzar.id,
-          played_cards: game.white_played
+          played_cards: game.white_played.order('random()')
         }
       }
     end
@@ -150,7 +148,6 @@ class GamesController < ApplicationController
           winning_card: card.id,
           black_card: black_card,
           card_tzar: card_tzar.id,
-          clear_table_at: Time.now.to_i + 15
         }
       })
     end

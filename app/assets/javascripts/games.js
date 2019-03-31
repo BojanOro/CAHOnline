@@ -52,12 +52,28 @@ function msg_endRound(data) {
   setTimeout(function() {
     gameState = "playing";
     clearTable(data["params"]["card_tzar"]);
-  }, data["params"]["clear_table_at"] * 1000 - timestamp);
+  }, 10000);
 }
 
 function msg_endGame(data) {
   winner = players[data["params"]["winner"]];
-  alert("Game has ended. " + winner.email + " has won.");
+  addPoint(data["params"]["winner"]);
+  $("#winnerModalBody").html("Game has ended. " + winner.name + " has won.");
+  for (id in players) {
+    $("#playerListWinner").append(
+      "<tr><td id='player_" +
+        id +
+        "'>"+
+        players[id]["name"] +
+        " </td><td> " +
+        players[id]["points"] +
+        " </td></tr>"
+    );
+  }
+  $("#winnerModal").modal({
+    backdrop: 'static',
+    keyboard: false
+  });
 }
 
 function msg_playerLeft(data) {
@@ -75,17 +91,11 @@ function renderPlayerList() {
     $("#playerList").append(
       "<tr><td id='player_" +
         id +
-        "'>" +
-        players[id]["order"] +
-        "-" +
+        "'>"+
         players[id]["name"] +
         " </td><td> " +
         players[id]["points"] +
-        " </td><td> " +
-        players[id]["played"] +
-        " </td><td> " +
-        (id == cardTzarId) +
-        "</td></tr>"
+        " </td></tr>"
     );
   }
 }
@@ -145,7 +155,7 @@ function addPlayedCard(cardId, cardText) {
     return false;
   }
   turnOffDragging();
-  $("#card-drop").append(
+  $("#card-drop").html(
     '<div class="card" id="card_' +
       cardId +
       '">\
@@ -206,6 +216,7 @@ function evaluateCardTzar() {
 
 function showPlayedCards(cards) {
   $("#card-drop").hide();
+  $("#card-drop").html("Drag Card Here");
   $("#card-drop")
     .find(".card")
     .remove();
