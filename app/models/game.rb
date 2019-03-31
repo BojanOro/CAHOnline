@@ -131,7 +131,7 @@ class Game < ApplicationRecord
       type: "PLAYER_LEFT",
       params: {
         id: player.id,
-        cardTzar: self.card_tzar.id
+        cardTzar: self.card_tzar&.id || -1
       }
     })
   end
