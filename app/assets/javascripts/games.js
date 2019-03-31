@@ -37,6 +37,7 @@ function msg_cardPlay(data) {
 
 function msg_cardTzar(data) {
   gameState = "picking";
+
   showPlayedCards(data["params"]["played_cards"]);
   enablePickingButtons();
 }
@@ -207,13 +208,8 @@ function markCardPlayed(playerId) {
 
 function evaluateCardTzar() {
   if (playerId == cardTzarId) {
-    // Start button
-    if (gameState == "setup") {
-      $(".startButton").show();
-    } else {
-      $(".startButton").hide();
-    }
-
+    
+    $(".deck-drop").hide();
     turnOffDragging();
   } else {
     turnOnDragging();

@@ -1,8 +1,22 @@
+<head>
+<%= stylesheet_link_tag 'login' %>
+</head>
 <h2>Sign up</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
-
+  <div class="loginContainer">
+    <h1>Register</h1> 
+    <div class="inputContainer">
+      <input type="text" placeholder="Name..." name="name" required>
+      <input type="text" placeholder="E-mail..." name="email" required>
+      <input type="text" placeholder="Username..." name="uname" required>
+      <div class="pass">
+          <input type="password" placeholder="Password..." name="pass" required>
+      </div>
+      <button class="btn btn-outline-light">REGISTER</button>
+    </div>
+  </div>
   <div class="field">
     <%= f.label :email %><br />
     <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
