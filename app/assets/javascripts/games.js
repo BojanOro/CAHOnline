@@ -52,7 +52,7 @@ function msg_endRound(data) {
   setTimeout(function() {
     gameState = "playing";
     clearTable(data["params"]["card_tzar"]);
-  }, data["params"]["clear_table_at"] * 1000 - timestamp);
+  }, 10000);
 }
 
 function msg_endGame(data) {

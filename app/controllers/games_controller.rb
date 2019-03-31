@@ -150,7 +150,6 @@ class GamesController < ApplicationController
           winning_card: card.id,
           black_card: black_card,
           card_tzar: card_tzar.id,
-          clear_table_at: Time.now.to_i + 15
         }
       })
     end
