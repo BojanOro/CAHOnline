@@ -83,7 +83,7 @@ CardTemplate.create(color: "black", text: "In L.A. County Jail, word is you can 
 CardTemplate.create(color: "black", text: "Maybe she's born with it. Maybe it's _.")
 CardTemplate.create(color: "black", text: "Life for American Indians was forever changed when the White Man introduced them to _.")
 CardTemplate.create(color: "black", text: "Next on ESPN2, the World Series of _.")
-CardTemplate.create(color: "black", text: "Here is the church, Here is the steeple, Open the doors,And there is _.")
+CardTemplate.create(color: "black", text: "Here is the church, Here is the steeple, Open the doors, And there is _.")
 CardTemplate.create(color: "black", text: "How did I lose my virginity?")
 CardTemplate.create(color: "black", text: "During his childhood, Salvador Dal&iacute; produced hundreds of paintings of _.")
 CardTemplate.create(color: "black", text: "In 1,000 years, when paper money is a distant memory, how will we pay for goods and services?")
