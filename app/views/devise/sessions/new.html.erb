@@ -11,12 +11,12 @@
   <div class="field">
   <br />
     <%= f.label :email%><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
+    <%= f.email_field :email, autofocus: true, class: "input" %>
   </div>
   <div class="field">
   <br />
     <%= f.label :password%>
-    <%= f.password_field :password, autocomplete: "current-password",  class: "input"%>
+    <%= f.password_field :password,  class: "input"%>
   </div>
 
   <% if devise_mapping.rememberable? %>
