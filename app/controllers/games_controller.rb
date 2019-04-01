@@ -3,6 +3,11 @@ class GamesController < ApplicationController
 
   def register
     game = Game.find(params['id'])
+    if game.full?
+      flash[:error] = "Game is full"
+      redirect_to :root
+      return false
+    end
     if game.password.present?
       render 'password'
     else

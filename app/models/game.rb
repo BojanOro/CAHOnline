@@ -23,6 +23,10 @@ class Game < ApplicationRecord
     self.update_attributes(card_tzar: nil)
   end
 
+  def full?
+    self.users.count >= 8
+  end
+
   def deal_cards
     self.users.each do |player|
       cards = self.white_deck.limit(7)
