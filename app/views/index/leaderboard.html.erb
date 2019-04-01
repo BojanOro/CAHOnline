@@ -25,13 +25,15 @@
   		<th scope="col">Name</th>
   		<th scope="col">Total Points</th>
       </tr>
-      <tbody>
-      	<% User.all.order(total_points: :desc).each_with_index do |user, i| %>
-      	<tr>
-      	  <td><%= i+1 %></td>
-      	  <td><%= user.name || user.email %></td>
-      	  <td><%= user.total_points || 0 %></td>
-      </tbody>
+    </thead>
+    <tbody>
+    	<% User.all.order(total_points: :desc).each_with_index do |user, i| %>
+    	<tr>
+    	  <td><%= i+1 %></td>
+    	  <td><%= user.name || user.email %></td>
+    	  <td><%= user.total_points || 0 %></td>
+      </tr>
+    </tbody>
     <br>
     <% end %>
   </table>
