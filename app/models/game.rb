@@ -127,12 +127,23 @@ class Game < ApplicationRecord
     if self.card_tzar == player
       next_card_tzar
     end
-    ActionCable.server.broadcast("game_#{self.id}", {
+    message = {
       type: "PLAYER_LEFT",
       params: {
         id: player.id,
-        cardTzar: self.card_tzar&.id || -1
+        cardTzar: self.card_tzar&.id || -1,
       }
-    })
+
+    if self.all_played?
+      message[:params][:callback] = {
+        type: "TZAR_CHOICE",
+        params: {
+          card_tzar: self.card_tzar.id,
+          played_cards: self.white_played.order('random()')
+        }
+      }
+    end
+
+    ActionCable.server.broadcast("game_#{self.id}", message)
   end
 end
