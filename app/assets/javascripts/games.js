@@ -81,6 +81,9 @@ function msg_playerLeft(data) {
   evaluateCardTzar();
   delete players[data["params"]["id"]];
   renderPlayerList();
+  if (data["callback"]) {
+    msg_cardTzar(data["callback"]);
+  }
 }
 
 //========= mo shit =========== //

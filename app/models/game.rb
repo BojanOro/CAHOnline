@@ -136,7 +136,7 @@ class Game < ApplicationRecord
     }
 
     if self.all_played?
-      message[:params][:callback] = {
+      message[:callback] = {
         type: "TZAR_CHOICE",
         params: {
           card_tzar: self.card_tzar.id,
