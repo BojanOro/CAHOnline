@@ -136,8 +136,8 @@ class Game < ApplicationRecord
     }
 
     if self.all_played?
-      game.flip_played_cards
-      game.update_attributes(state: "picking")
+      self.flip_played_cards
+      self.update_attributes(state: "picking")
       message[:callback] = {
         type: "TZAR_CHOICE",
         params: {
