@@ -133,6 +133,7 @@ class Game < ApplicationRecord
         id: player.id,
         cardTzar: self.card_tzar&.id || -1,
       }
+    }
 
     if self.all_played?
       message[:params][:callback] = {
