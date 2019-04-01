@@ -1,0 +1,106 @@
+<div class="gameBox">
+  <div class="gameBoxHeader">
+    <div class="leaveButton"><button class="btn btn-outline-light" onClick="leaveGameButton()">Leave Game</button></div>
+    <div class="cardTzar">Card Tzar: <span class="cardTzarContent"><%= @cardTzar.name || @cardTzar.email %></span></div>
+    <div class="lobbyNumber">Lobby Name: <%= @game.name %></div>
+  </div>
+
+  <div class="mainText clear" id="text">
+    <span class="startButton" style="display: none">
+    <button class="btn btn-outline-light btn-lg" onClick="startGameButton()">
+      Start Game
+    </button>
+  </span>
+  </div>
+
+  <div class="game_area" id="game_area" style="display: none">
+    <br />
+    <div class="row" id="startingScreen">
+      <div class="deck-drop" id="card-drop" style="opacity: 50;">Drag Card Here</div>
+      <div id="face-down-whites"></div>
+    </div>
+  </div>
+
+</div>
+<br>
+<div class="row" id="white-cards"></div>
+
+<br /><br />
+<div class="row table-responsive">
+  <table class="table" id="table">
+    <thead>
+      <th>Player</th>
+      <th>Score</th>
+      <th>Card Submitted</th>
+      <th>Card Tzar</th>
+    </thead>
+    <tbody id="playerList">
+    </tbody>
+  </table>
+</div>
+<script>
+  var playerId = <%= current_user.id %>;
+  var cardTzarId = <%= @cardTzar.id %>;
+  var gameId = <%= @game.id %>;
+  var whiteCards = [];
+  var blackCard;
+  var gameState = "<%= @game.state %>";
+
+  var players = {
+    <% @players.each do |player| %>
+      <%= player.id %>: {
+        email: "<%= player.email %>",
+        name: "<%= player.get_name %>",
+        points: <%= player.game_points %>,
+        order: <%= player.join_order %>,
+        played: <%= player.played_card? %>,
+      },
+
+    <% end %>
+  };
+  window.onload = function(){
+    if(gameState == "setup"){
+      if(playerId == cardTzarId){
+        $(".startButton").show();
+      }else{
+        $("#text").html("Waiting for Card Tzar to start game.");
+        $(".startButton").fadeIn(750);
+      }
+      $(".game_area").hide();
+    }
+    if(gameState != "setup"){
+      $(".gameBox").animate({ height: 485 }, 200, "swing", function() {
+        getWhiteCards(function(){
+          addPlayedCard(<%= current_user.get_played_card&.id || -1 %>, "<%= current_user.get_played_card&.text %>");
+          enablePickingButtons();
+        });
+        getBlackCard();
+        <% if @game.state != "picking" %>
+          addFakeWhiteCard(<%= @game.white_played.where.not(user: current_user).count %>);
+        <% end %>
+        $(".game_area").fadeIn(750);
+      });
+    }
+  }
+
+
+  initCardDropListener();
+  evaluateCardTzar();
+  renderPlayerList();
+
+
+  <% if @game.state == "picking" %>
+    showPlayedCards(<%= @game.white_played.to_json.html_safe %>)
+  <% end %>
+
+  function startGameButton(){
+    $.get("/games/" + gameId + "/startgame", function( data ) {
+    });
+  }
+
+  function leaveGameButton(){
+    $.get("/games/" + gameId + "/leave_game", function( data ) {
+      window.location.href = "/";
+    });
+  }
+</script>
