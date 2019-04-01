@@ -175,8 +175,8 @@ function addFakeWhiteCard(amount) {
   for (var i = 0; i < amount; i++) {
     $("#face-down-whites").append(
       '<div class="card">\
-      <div class="card-body">\
-        <p class="card-text">Blank</p>\
+      <div class="card-body blank">\
+        <p class="card-text">Cards Against Ryerson\'s Humanity</p>\
       </div>\
     </div>'
     );

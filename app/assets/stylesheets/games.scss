@@ -37,8 +37,16 @@
 
 #face-down-whites {
   display: flex;
-  .card{
-    margin-right: 20px
+  .card {
+    margin-right: 20px;
+
+    .card-body {
+      &.blank {
+        display: flex;
+        align-items: flex-end;
+        font-size: 12pt;
+      }
+    }
   }
 }
 .container {
